@@ -1,0 +1,38 @@
+---
+- name: Create folder structure
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ data_dir }}/nextcloud"
+    - "{{ data_dir }}/nextcloud/data"
+    - "{{ data_dir }}/nextcloud/db"
+
+- name: Create Nextcloud DB Docker Container
+  docker_container:
+    name: nc_postgresql
+    image: postgres:16-alpine
+    restart_policy: unless-stopped
+    recreate: true
+    networks:
+      - name: nextcloud
+    volumes:
+      - "{{ data_dir }}/nextcloud/db:/var/lib/postgresql/data"
+    env:
+      PGDATA: /var/lib/postgresql/data/pgdata
+      POSTGRES_PASSWORD: "{{ NEXTCLOUD_POSTGRES_PASSWORD }}"
+      POSTGRES_DATABASE: "{{ NEXTCLOUD_POSTGRES_DATABASE }}"
+      POSTGRES_USER: "{{ NEXTCLOUD_POSTGRES_USER }}"
+      POSTGRES_HOST: "{{ NEXTCLOUD_POSTGRES_HOST }}"
+
+- name: Create Nextcloud Docker Container
+  docker_container:
+    name: nextcloud
+    image: nextcloud
+    restart_policy: unless-stopped
+    recreate: true
+    networks:
+      - name: homelab
+      - name: nextcloud
+    volumes:
+      - "{{ data_dir }}/nextcloud/data:/var/www/html"

@@ -1,0 +1,25 @@
+---
+- name: Create folder structure
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ data_dir }}/code-server"
+
+- name: Create Code Server Docker Container
+  docker_container:
+    name: codeserver
+    image: lscr.io/linuxserver/code-server:latest
+    restart_policy: unless-stopped
+    recreate: true
+    networks:
+      - name: homelab
+    volumes:
+      - "{{ data_dir }}/code-server:/config"
+      - "/storage-pool/iac/containers:/config/workspace/docker"
+    env:
+      PROXY_DOMAIN: "{{ CODE_PROXY_DOMAIN }}"
+      DEFAULT_WORKSPACE: "{{ CODE_DEFAULT_WORKSPACE }}"
+      TZ: "{{ TZ }}"
+      PUID: "{{ PUID }}"
+      PGID: "{{ PGID }}"

@@ -1,0 +1,9 @@
+---
+- name: Create Excalidraw Docker Container
+  docker_container:
+    name: excalidraw
+    image: excalidraw/excalidraw
+    restart_policy: unless-stopped
+    recreate: true
+    networks:
+      - name: homelab

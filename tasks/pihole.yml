@@ -1,0 +1,24 @@
+---
+- name: Create folder structure
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ data_dir }}/pihole"
+
+- name: Create PiHole Docker Container
+  docker_container:
+    name: pihole
+    image: pihole/pihole:latest
+    restart_policy: unless-stopped
+    recreate: true
+    networks:
+      - name: homelab
+    published_ports:
+      - "{{ CADDY_HOST_IP }}:53:53/tcp"
+      - "{{ CADDY_HOST_IP }}:53:53/udp"
+    volumes:
+      - "{{ data_dir }}/pihole:/etc/pihole"
+    env:
+      FTLCONF_webserver_api_password: "{{ PIHOLE_FTLCONF_WEBSERVER_API_PASSWORD }}"
+      TZ: "{{ TZ }}"

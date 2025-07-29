@@ -1,0 +1,53 @@
+# Snippets
+{% for snippet_name, snippet_content in caddy_snippets.items() %}
+({{ snippet_name }}) {
+{% for line in snippet_content %}
+  {{ line }}
+{% endfor %}
+}
+
+{% endfor %}
+
+# Sites
+{% for site in caddy_sites %}
+{{ site.domains | join(', ') }} {
+  {% if site.import_snippets is defined %}
+  {% for snippet in site.import_snippets %}
+  import {{ snippet }}
+  {% endfor %}
+  {% endif %}
+  
+  {% if site.tls is defined %}
+  tls {
+    {% if site.tls.dns is defined %}
+    dns {{ site.tls.dns.provider }} {{ site.tls.dns.token }}
+    {% endif %}
+    {% if site.tls.cert is defined %}
+    {{ site.tls.cert }} {{ site.tls.key }}
+    {% endif %}
+  }
+  {% endif %}
+
+  {% for matcher in site.matchers | default([]) %}
+  @{{ matcher.name }} {{ matcher.type }} {{ matcher.value }}
+  {% endfor %}
+
+  {% for handler in site.handlers | default([]) %}
+  handle {% if handler.matcher is defined %}@{{ handler.matcher }} {% endif %}{
+    {% if handler.reverse_proxy is defined %}
+    reverse_proxy {{ handler.reverse_proxy }}
+    {% elif handler.respond is defined %}
+    respond {{ handler.respond }}
+    {% elif handler.file_server is defined %}
+    file_server
+    {% endif %}
+    {% if handler.custom is defined %}
+    {% for line in handler.custom %}
+    {{ line }}
+    {% endfor %}
+    {% endif %}
+  }
+  {% endfor %}
+}
+
+{% endfor %}

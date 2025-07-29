@@ -1,0 +1,61 @@
+---
+- name: Create folder structure
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ data_dir }}/immich"
+    - "{{ data_dir }}/immich/model-cache"
+    - "{{ data_dir }}/immich/db"
+
+- name: Create Immich Redis Docker Container
+  docker_container:
+    name: immich_redis
+    image: docker.io/valkey/valkey:8-bookworm@sha256:ff21bc0f8194dc9c105b769aeabf9585fea6a8ed649c0781caeac5cb3c247884
+    restart_policy: unless-stopped
+    recreate: true
+    networks:
+      - name: immich
+
+- name: Create Immich DB Docker Container
+  docker_container:
+    name: immich_postgres
+    image: ghcr.io/immich-app/postgres:14-vectorchord0.3.0-pgvectors0.2.0
+    restart_policy: unless-stopped
+    recreate: true
+    volumes:
+      - "{{ data_dir }}/immich/db:/var/lib/postgresql/data"
+    env:
+      POSTGRES_PASSWORD: "{{ IMMICH_DB_PASSWORD }}"
+      POSTGRES_USER: "{{ IMMICH_DB_USERNAME }}"
+      POSTGRES_DB: "{{ IMMICH_DB_DATABASE_NAME }}"
+      POSTGRES_INITDB_ARGS: "--data-checksums"
+    networks:
+      - name: immich
+
+- name: Create Immich ML Docker Container
+  docker_container:
+    name: immich_machine_learning
+    image: ghcr.io/immich-app/immich-machine-learning:release
+    restart_policy: unless-stopped
+    recreate: true
+    volumes:
+      - "{{ data_dir }}/immich/model-cache:/cache"
+    networks:
+      - name: immich
+
+- name: Create Immich Server Docker Container
+  docker_container:
+    name: immich_server
+    image: ghcr.io/immich-app/immich-server:release
+    restart_policy: unless-stopped
+    recreate: true
+    networks:
+      - name: homelab
+      - name: immich
+    volumes:
+      - "{{ IMMICH_UPLOAD_LOCATION }}:/usr/src/app/upload"
+      - "/etc/localtime:/etc/localtime:ro"
+    env:
+      DOZZLE_ENABLE_ACTIONS: "{{ DOZZLE_ACTIONS }}"
+      DOZZLE_ENABLE_SHELL: "{{ DOZZLE_SHELL }}"

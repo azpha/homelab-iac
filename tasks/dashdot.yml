@@ -1,0 +1,11 @@
+---
+- name: Create Dashdot Docker Container
+  docker_container:
+    name: dashdot
+    image: mauricenino/dashdot
+    restart_policy: unless-stopped
+    recreate: true
+    networks:
+      - name: homelab
+    volumes:
+      - "/:/mnt/host:ro"

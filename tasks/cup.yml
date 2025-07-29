@@ -1,0 +1,12 @@
+---
+- name: Create Cup Docker Container
+  docker_container:
+    name: Cup
+    image: ghcr.io/sergi0g/cup
+    command: serve
+    restart_policy: unless-stopped
+    recreate: true
+    networks:
+      - name: homelab
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"

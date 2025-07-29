@@ -1,0 +1,17 @@
+---
+- name: Create Folder structure
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ data_dir }}/homebridge"
+
+- name: Create Homebridge Docker Container
+  docker_container:
+    name: homebridge
+    image: homebridge/homebridge:latest
+    restart_policy: unless-stopped
+    network_mode: host
+    recreate: true
+    volumes:
+      - "{{ data_dir }}/homebridge:/homebridge"

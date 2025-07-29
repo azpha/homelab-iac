@@ -1,0 +1,25 @@
+---
+- name: Create folder structure
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ data_dir }}/nzbget"
+
+- name: Create NZBGet Docker Container
+  docker_container:
+    name: nzbget
+    image: lscr.io/linuxserver/nzbget:latest
+    restart_policy: unless-stopped
+    recreate: true
+    networks:
+      - name: homelab
+    volumes:
+      - "{{ data_dir }}/nzbget:/config"
+      - "{{ NZBGET_DOWNLOADS_PATH }}:/downloads"
+    env:
+      NZBGET_USER: "{{ NZBGET_USER }}"
+      NZBGET_PASS: "{{ NZBGET_PASS }}"
+      TZ: "{{ TZ }}"
+      PUID: "{{ PUID }}"
+      PGID: "{{ PGID }}"

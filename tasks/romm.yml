@@ -1,0 +1,63 @@
+---
+- name: Create folder structure
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ data_dir }}/romm"
+    - "{{ data_dir }}/romm/igdb"
+    - "{{ data_dir }}/romm/assets"
+    - "{{ data_dir }}/romm/config"
+    - "{{ data_dir }}/romm/db"
+
+- name: Create Romm DB Docker Container
+  docker_container:
+    name: romm-db
+    image: mariadb:latest
+    restart_policy: unless-stopped
+    recreate: true
+    networks:
+      - name: romm
+    volumes:
+      - "{{ data_dir }}/romm/db:/var/lib/mysql"
+    env:
+      MARIADB_ROOT_PASSWORD: romm
+      MARIADB_DATABASE: romm
+      MARIADB_USER: romm-user
+      MARIADB_PASSWORD: romm
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      start_period: 30s
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+- name: Create Romm Docker Container
+  docker_container:
+    name: romm
+    image: rommapp/romm:latest
+    restart_policy: unless-stopped
+    recreate: true
+    networks:
+      - name: homelab
+      - name: romm
+    volumes:
+      - "{{ data_dir }}/romm/igdb:/romm/resources"
+      - "{{ data_dir }}/romm/redis:/redis-data"
+      - "{{ data_dir }}/romm/assets:/romm/assets"
+      - "{{ data_dir }}/romm/config:/romm/config"
+      - "{{ ROMM_LIBRARY_PATH }}:/romm/library"
+    env:
+      DB_HOST: romm-db
+      DB_NAME: romm
+      DB_USER: romm-user
+      DB_PASSWD: romm
+      AUTH_SECRET_KEY: "{{ ROMM_AUTH_SECRET_KEY }}"
+      IGDB_CLIENT_ID: "{{ ROMM_IGDB_CLIENT_ID }}"
+      IGDB_CLIENT_SECRET: "{{ ROMM_IGDB_CLIENT_SECRET }}"
+      OIDC_ENABLED: "{{ ROMM_OIDC_ENABLED }}"
+      OIDC_PROVIDER: "{{ ROMM_OIDC_PROVIDER }}"
+      OIDC_CLIENT_ID: "{{ ROMM_OIDC_CLIENT_ID }}"
+      OIDC_CLIENT_SECRET: "{{ ROMM_OIDC_CLIENT_SECRET }}"
+      OIDC_REDIRECT_URL: "{{ ROMM_OIDC_REDIRECT_URL }}"
+      SERVER_APPLICATION_URL: "{{ ROMM_SERVER_APPLICATION_URL }}"

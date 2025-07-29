@@ -1,0 +1,20 @@
+---
+- name: Create folder structure
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ data_dir }}/vaultwarden"
+
+- name: Create Vaultwarden Docker Container
+  docker_container:
+    name: vaultwarden
+    image: vaultwarden/server:latest
+    restart_policy: unless-stopped
+    recreate: true
+    networks:
+      - name: homelab
+    volumes:
+      - "{{ data_dir }}/vaultwarden:/data"
+    env:
+      DOMAIN: "{{ VAULTWARDEN_DOMAIN }}"

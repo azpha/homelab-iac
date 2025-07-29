@@ -1,0 +1,27 @@
+---
+- name: Create folder structure
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ data_dir }}/glance"
+    - "{{ data_dir }}/glance/config"
+    - "{{ data_dir }}/glance/assets"
+
+- name: Create Glance Docker Container
+  docker_container:
+    name: glance
+    image: glanceapp/glance
+    restart_policy: unless-stopped
+    recreate: true
+    networks:
+      - name: homelab
+    env:
+      PIHOLE_TOKEN: "{{ GLANCE_PIHOLE_TOKEN }}"
+      VIDEO_MACHINE: "{{ GLANCE_VIDEO_MACHINE }}"
+      JELLYFIN_URL: "{{ GLANCE_JELLYFIN_URL }}"
+      JELLYFIN_TOKEN: "{{ GLANCE_JELLYFIN_TOKEN }}"
+    volumes:
+      - "{{ data_dir }}/glance/config:/app/config"
+      - "{{ data_dir }}/glance/assets:/app/assets"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"

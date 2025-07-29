@@ -1,0 +1,49 @@
+---
+- name: Create folder structure
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ data_dir }}/servarr"
+    - "{{ data_dir }}/servarr/sonarr_config"
+    - "{{ data_dir }}/servarr/radarr_config"
+    - "{{ data_dir }}/servarr/lidarr_config"
+
+- name: Deploy Radarr Container
+  docker_container:
+    name: radarr
+    image: ghcr.io/hotio/radarr
+    restart_policy: unless-stopped
+    recreate: true
+    volumes:
+      - "{{ data_dir }}/servarr/radarr_config:/config"
+      - "{{ SERVARR_MEDIA_PATH }}:/media"
+      - "{{ NZBGET_DOWNLOADS_PATH }}:/downloads"
+    networks:
+      - name: homelab
+
+- name: Deploy Sonarr Container
+  docker_container:
+    name: sonarr
+    image: lscr.io/linuxserver/sonarr:latest
+    restart_policy: unless-stopped
+    recreate: true
+    volumes:
+      - "{{ data_dir }}/servarr/sonarr_config:/config"
+      - "{{ SERVARR_MEDIA_PATH }}:/media"
+      - "{{ NZBGET_DOWNLOADS_PATH }}:/downloads"
+    networks:
+      - name: homelab
+
+- name: Deploy Lidarr Container
+  docker_container:
+    name: lidarr
+    image: ghcr.io/hotio/lidarr
+    restart_policy: unless-stopped
+    recreate: true
+    volumes:
+      - "{{ data_dir }}/servarr/lidarr_config:/config"
+      - "{{ SERVARR_MEDIA_PATH }}:/media"
+      - "{{ NZBGET_DOWNLOADS_PATH }}:/downloads"
+    networks:
+      - name: homelab
