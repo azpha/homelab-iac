@@ -1,0 +1,13 @@
+---
+- name: Create Gitea Runner Docker Container
+  docker_container:
+    name: gitea_runner
+    image: docker.io/gitea/act_runner:nightly
+    restart_policy: unless-stopped
+    recreate: true
+    network_mode: host
+    env:
+      GITEA_INSTANCE_URL: "{{ GITEA_INSTANCE_URL }}"
+      GITEA_RUNNER_REGISTRATION_TOKEN: "{{ GITEA_RUNNER_REGISTRATION_TOKEN }}"
+      GITEA_RUNNER_NAME: "{{ GITEA_RUNNER_NAME }}"
+      GITEA_RUNNER_LABELS: "{{ GITEA_RUNNER_LABELS }}"

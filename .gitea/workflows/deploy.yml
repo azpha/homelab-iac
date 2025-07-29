@@ -1,0 +1,26 @@
+name: Deploy Containers
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Prepare
+    runs-on: runner
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@4
+        with:
+          fetch-depth: 0
+
+      - name: Deploy
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_KNOWN_HOSTS }}" >> ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
+          ssh-add <(echo "${{ secrets.SSH_KEY }}")
+          echo "HOST *" > ~/.ssh/config
+          echo "${{ secrets.VAULT_PASS }}" > ~/.vault_pass.txt
+          ./.gitea/scripts/deploy_containers.sh "${{ github.event.before }}" "${{ github.sha }}"

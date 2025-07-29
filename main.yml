@@ -59,3 +59,6 @@
     - name: Deploy Immich
       import_tasks: tasks/immich.yml
       tags: immich_deploy
+    - name: Deploy Gitea Runner
+      import_tasks: tasks/gitea-runner.yml
+      tags: gitea-runner_deploy
