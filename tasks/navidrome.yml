@@ -1,0 +1,19 @@
+---
+- name: Create folder structure
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ data_dir }}/navidrome"
+
+- name: Create Navidrome Docker Container
+  docker_container:
+    name: navidrome
+    image: deluan/navidrome:latest
+    restart_policy: unless-stopped
+    recreate: true
+    networks:
+      - name: homelab
+    volumes:
+      - "{{ data_dir }}/navidrome:/data"
+      - "{{ NAVIDROME_MUSIC_PATH }}:/music:ro"
