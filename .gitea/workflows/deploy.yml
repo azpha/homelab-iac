@@ -13,7 +13,6 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v4
         with:
-          path: "${{ vars.STORAGE_PATH }}"
           fetch-depth: 0
 
       - name: Deploy
@@ -25,4 +24,4 @@ jobs:
           ssh-add <(echo "${{ secrets.SSH_KEY }}")
           echo "HOST *" > ~/.ssh/config
           echo "${{ secrets.VAULT_PASS }}" > ~/.vault_pass.txt
-          ./.gitea/scripts/deploy_containers.sh "${{ github.event.before }}" "${{ github.sha }}"
+          ./scripts/deploy_containers.sh "${{ github.event.before }}" "${{ github.sha }}"
