@@ -10,11 +10,6 @@ jobs:
     name: Prepare
     runs-on: jade
     steps:
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "24"
-
       - name: Checkout Repo
         uses: actions/checkout@v4
         with:
