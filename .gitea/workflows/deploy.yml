@@ -11,7 +11,7 @@ jobs:
     runs-on: jade
     steps:
       - name: Checkout Repo
-        uses: actions/checkout@4
+        uses: actions/checkout
         with:
           fetch-depth: 0
 
