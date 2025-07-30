@@ -24,4 +24,5 @@ jobs:
           ssh-add <(echo "${{ secrets.SSH_KEY }}")
           echo "HOST *" > ~/.ssh/config
           echo "${{ secrets.VAULT_PASS }}" > ~/.vault_pass.txt
+          chmod +x ./scripts/deploy_containers.sh
           ./scripts/deploy_containers.sh "${{ github.event.before }}" "${{ github.sha }}"
