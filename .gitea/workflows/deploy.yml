@@ -20,6 +20,7 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_KNOWN_HOSTS }}" >> ~/.ssh/known_hosts
           chmod 644 ~/.ssh/known_hosts
+          eval $(ssh-agent -s)
           ssh-add <(echo "${{ secrets.SSH_KEY }}")
           echo "HOST *" > ~/.ssh/config
           echo "${{ secrets.VAULT_PASS }}" > ~/.vault_pass.txt
