@@ -1,6 +1,8 @@
 #!/bin/bash
 
 # all new/updated tasks in the diff
+echo $1 $2
+
 new_tasks = ($(git diff --name-only $1 $2 | grep '\.yml$'))
 
 if [! -z "$new_tasks"]; then
