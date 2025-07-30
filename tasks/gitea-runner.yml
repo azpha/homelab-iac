@@ -1,4 +1,11 @@
 ---
+- name: Create folder structure
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ data_dir }}/gitea"
+
 - name: Create Gitea Runner Docker Container
   docker_container:
     name: gitea_runner
@@ -6,6 +13,8 @@
     restart_policy: unless-stopped
     recreate: true
     network_mode: host
+    volumes:
+      - "{{ data_dir }}/gitea:/data"
     env:
       GITEA_INSTANCE_URL: "{{ GITEA_INSTANCE_URL }}"
       GITEA_RUNNER_REGISTRATION_TOKEN: "{{ GITEA_RUNNER_REGISTRATION_TOKEN }}"
