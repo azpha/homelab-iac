@@ -61,3 +61,6 @@
     - name: Deploy Immich
       import_tasks: tasks/immich.yml
       tags: immich_deploy
+    - name: Deploy Jellyfikn
+      import_tasks: tasks/jellyfin.yml
+      tags: jellyfin_deploy

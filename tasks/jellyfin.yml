@@ -1,0 +1,25 @@
+---
+- name: Create folder structure
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ data_dir }}/jellyfin"
+
+- name: Create Jellyfin Docker Container
+  docker_container:
+    name: jellyfin
+    image: lscr.io/linuxserver/jellyfin:latest
+    restart_policy: unless-stopped
+    recreate: true
+    networks:
+      - name: homelab
+    volumes:
+      - "{{ data_dir }}/jellyfin:/config"
+      - "{{ JELLYFIN_TV_PATH }}:/data/tvshows"
+      - "{{ JELLYFIN_MOVIE_PATH }}:/data/movies"
+      - "{{ JELLYFIN_MUSIC_PATH }}:/data/music"
+    env:
+      PUID: "{{ PUID }}"
+      PGID: "{{ PGID }}"
+      TZ: "{{ TZ }}"
