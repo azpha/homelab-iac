@@ -16,7 +16,7 @@
       - name: homelab
     volumes:
       - "{{ data_dir }}/code-server:/config"
-      - "/storage-pool/iac/containers:/config/workspace/docker"
+      - "{{ data_dir }}:/config/workspace/docker"
     env:
       PROXY_DOMAIN: "{{ CODE_PROXY_DOMAIN }}"
       DEFAULT_WORKSPACE: "{{ CODE_DEFAULT_WORKSPACE }}"
