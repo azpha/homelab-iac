@@ -11,10 +11,8 @@
 # Sites
 {% for site in caddy_sites %}
 {{ site.domains | join(', ') }} {
-  {% if site.import_snippets is defined %}
-  {% for snippet in site.import_snippets %}
-  import {{ snippet }}
-  {% endfor %}
+  {% if site.import_tinyauth is defined %}
+    import tinyauth_forwarder *
   {% endif %}
   
   {% if site.tls is defined %}

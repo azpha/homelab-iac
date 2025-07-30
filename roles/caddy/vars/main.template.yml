@@ -27,6 +27,5 @@ caddy_sites:
         reverse_proxy: glance:8080
       - matcher: code
         reverse_proxy: codeserver:8443
-        import_snippets:
-          - tinyauth_forwarder
+        import_tinyauth: true
       - respond 404
