@@ -33,7 +33,6 @@
     name: caddy
     image: caddy:latest
     recreate: true
-    command: run --watch
     restart_policy: unless-stopped
     networks:
       - name: homelab
