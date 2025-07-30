@@ -30,7 +30,8 @@
   handle {% if handler.matcher is defined %}@{{ handler.matcher }} {% endif %}{
     {% if handler.reverse_proxy is defined %}
     reverse_proxy {{ handler.reverse_proxy }}
-    {% elif handler.import_tinyauth is defined %}
+    {% endif %}
+    {% if handler.import_tinyauth is defined %}
     import tinyauth_forwarder *
     {% endif %}
   }
