@@ -26,6 +26,11 @@
     env:
       GF_AUTH_ANONYMOUS_ENABLED: "{{ GRAFANA_AUTH_ANONYMOUS_ENABLED }}"
 
+- name: Copy Prometheus Config
+  template:
+    src: "prometheus.yml.j2"
+    dest: "{{ data_dir }}/monitoring/prometheus/prometheus.yml"
+
 - name: Create Prometheus Docker Container
   docker_container:
     name: prometheus
