@@ -15,6 +15,7 @@
 - name: Create Grafana Docker Container
   docker_container:
     name: grafana
+    user: "{{ PUID }}"
     image: grafana/grafana:latest
     restart_policy: unless-stopped
     recreate: true
