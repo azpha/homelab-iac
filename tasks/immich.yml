@@ -57,5 +57,7 @@
       - "{{ IMMICH_UPLOAD_LOCATION }}:/usr/src/app/upload"
       - "/etc/localtime:/etc/localtime:ro"
     env:
-      DOZZLE_ENABLE_ACTIONS: "{{ DOZZLE_ACTIONS }}"
-      DOZZLE_ENABLE_SHELL: "{{ DOZZLE_SHELL }}"
+      DB_HOSTNAME: "immich_postgres"
+      DB_PASSWORD: "{{ IMMICH_DB_PASSWORD }}"
+      DB_USERNAME: "{{ IMMICH_DB_USERNAME }}"
+      DN_DATABASE_NAME: "{{ IMMICH_DB_DATABASE_NAME }}"
