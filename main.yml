@@ -67,3 +67,6 @@
     - name: Deploy Navidrome
       import_tasks: tasks/navidrome.yml
       tags: navidrome_deploy
+    - name: Deploy Monitoring Stack
+      import_tasks: tasks/monitoring.yml
+      tags: monitoring_deploy
