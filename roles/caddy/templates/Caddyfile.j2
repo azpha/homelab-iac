@@ -11,10 +11,6 @@
 # Sites
 {% for site in caddy_sites %}
 {{ site.domains | join(', ') }} {
-  {% if site.import_tinyauth is defined %}
-    import tinyauth_forwarder *
-  {% endif %}
-  
   {% if site.tls is defined %}
   tls {
     {% if site.tls.dns is defined %}
@@ -34,15 +30,8 @@
   handle {% if handler.matcher is defined %}@{{ handler.matcher }} {% endif %}{
     {% if handler.reverse_proxy is defined %}
     reverse_proxy {{ handler.reverse_proxy }}
-    {% elif handler.respond is defined %}
-    respond {{ handler.respond }}
-    {% elif handler.file_server is defined %}
-    file_server
-    {% endif %}
-    {% if handler.custom is defined %}
-    {% for line in handler.custom %}
-    {{ line }}
-    {% endfor %}
+    {% elif handler.import_tinyauth is defined %}
+    import tinyauth_forwarder *
     {% endif %}
   }
   {% endfor %}
