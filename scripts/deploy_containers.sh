@@ -10,10 +10,11 @@ if [ ! -z "$new_tasks" ]; then
 
   for task in "${new_tasks[@]}"; do
     ansible_tag=$(echo "$task" | awk -F/ '{print $2}')
-    if [[ "$tag" != "all.yml" && "$tag" != "all.template.yml" && "$tag" != "main.yml" ]] ; then
+    if [[ "$ansible_tag" != "all.yml" && "$ansible_tag" != "all.template.yml" && "$ansible_tag" != "main.yml" ]] ; then
       tag=${ansible_tag%.*}_deploy
-      echo $tag
-      ansible-playbook main.yml --tags "$tag" --vault-password-file ~/.vault_pass.txt
+      if [[ "$tag" != "_deploy" ]] ; then 
+        ansible-playbook main.yml --tags "$tag" --vault-password-file ~/.vault_pass.txt
+      fi
     fi
   done
 fi
