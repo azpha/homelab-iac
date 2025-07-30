@@ -29,7 +29,7 @@
 - name: Copy Prometheus Config
   template:
     src: "prometheus.yml.j2"
-    dest: "{{ data_dir }}/monitoring/prometheus/prometheus.yml"
+    dest: "{{ data_dir }}/monitoring/prometheus/config.yml"
 
 - name: Create Prometheus Docker Container
   docker_container:
@@ -42,7 +42,7 @@
       - name: monitoring
     volumes:
       - "{{ data_dir }}/monitoring/prometheus:/prometheus"
-      - "{{ data_dir }}/monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml"
+      - "{{ data_dir }}/monitoring/prometheus/config.yml:/etc/prometheus/prometheus.yml"
 
 - name: Create CAdvisor Docker Container
   docker_container:
