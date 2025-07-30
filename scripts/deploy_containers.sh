@@ -4,6 +4,7 @@
 echo $1 $2
 
 new_tasks=($(git diff --name-only $1 $2 | grep '\.yml$'))
+echo $new_tasks
 
 if [ ! -z "$new_tasks" ]; then
   for task in "${new_tasks[@]}"; do
