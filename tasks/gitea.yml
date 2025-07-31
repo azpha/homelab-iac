@@ -1,0 +1,24 @@
+---
+- name: Create folder structure
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ data_dir }}/gitea"
+
+- name: Create Gitea Docker Container
+  docker_container:
+    name: gitea
+    image: docker.gitea.com/gitea:latest
+    restart_policy: unless-stopped
+    recreate: true
+    networks:
+      - name: "{{ docker_network_name }}"
+    volumes:
+      - "{{ data_dir }}/gitea:/data"
+      - "/home/git/.ssh:/data/git/.ssh"
+    published_ports:
+      - "2222:22"
+    env:
+      USER_UID: "1000"
+      USER_GID: "1000"

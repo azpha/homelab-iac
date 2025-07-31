@@ -70,3 +70,20 @@
     - name: Deploy Monitoring Stack
       import_tasks: tasks/monitoring.yml
       tags: monitoring_deploy
+
+- hosts: jackson
+
+  roles:
+    - role: caddy
+      tags: caddy_deploy
+
+  tasks:
+    - name: Deploy Gitea
+      import_tasks: tasks/gitea.yml
+      tags: gitea_deploy
+    - name: Deploy API
+      import_tasks: tasks/api.yml
+      tags: api_deploy
+    - name: Deploy Storage API
+      import_tasks: tasks/storage-api.yml
+      tags: storage-api_deploy

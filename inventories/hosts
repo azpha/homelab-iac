@@ -1,2 +1,8 @@
 [jade]
-fntz.net ansible_user=alex
+jade ansible_host=fntz.net ansible_user=alex
+
+[jackson]
+jackson ansible_host=direct.jackson.alexav.gg ansible_user=root
+
+[nas]
+nas ansible_host=nas.fntz.net ansible_user=alex

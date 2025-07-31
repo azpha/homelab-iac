@@ -1,12 +1,13 @@
 # Snippets
+{% if caddy_snippets is defined %}
 {% for snippet_name, snippet_content in caddy_snippets.items() %}
 ({{ snippet_name }}) {
 {% for line in snippet_content %}
   {{ line }}
 {% endfor %}
 }
-
 {% endfor %}
+{% endif %}
 
 # Sites
 {% for site in caddy_sites %}
@@ -36,6 +37,16 @@
     {% endif %}
   }
   {% endfor %}
+
+  {% if handler.default is defined %}
+  handle {
+    {% if handler.default.redir is defined %}
+    redir {{ handler.default.redir }}
+    {% else %}
+    respond 404
+    {% endif %}
+  }
+  {% endif %}
 }
 
 {% endfor %}

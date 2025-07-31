@@ -1,0 +1,72 @@
+---
+- name: "Create file structure"
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ data_dir }}/api"
+    - "{{ data_dir }}/api/db"
+    - "{{ data_dir }}/api/app"
+
+- name: "Clone latest API"
+  git:
+    repo: git@git.alexav.gg:alex/api.git
+    dest: "{{ data_dir }}/api/app"
+
+- name: "Build API Docker Image"
+  docker_image:
+    name: api
+    tag: "latest"
+    build:
+      path: "{{ data_dir }}/api/app"
+      dockerfile: Dockerfile
+    source: build
+    state: present
+
+- name: Create API Network
+  docker_network:
+    name: api
+
+- name: Deploy Redis Container
+  docker_container:
+    name: api_redis
+    image: redis:latest
+    restart_policy: unless-stopped
+    recreate: true
+    networks:
+      - name: api
+
+- name: Deploy Database Container
+  docker_container:
+    name: api_postgres
+    image: postgres:latest
+    restart_policy: unless-stopped
+    recreate: true
+    networks:
+      - name: api
+    volumes:
+      - "{{ data_dir }}/api/db:/var/lib/postgresql/data"
+    env:
+      POSTGRES_PASSWORD: "{{ API_POSTGRES_PASSWORD }}"
+      PGDATA: "/var/lib/postgresql/data/pgdata"
+
+- name: Deploy API Container
+  docker_container:
+    name: api
+    image: api:latest
+    recreate: true
+    restart_policy: unless-stopped
+    networks:
+      - name: api
+      - name: "{{ docker_network_name }}"
+    env:
+      NODE_ENV: "production"
+      VERSION: "v4"
+      REDIS_URL: "redis://api_redis:6379"
+      ADMIN_KEY: "{{ API_ADMIN_KEY }}"
+      ADMIN_BYPASS_KEY: "{{ API_ADMIN_KEY }}"
+      DATABASE_URL: "{{ API_DATABASE_URL }}"
+      LASTFM_API_KEY: "{{ API_LASTFM_API_KEY }}"
+      STEAM_API_KEY: "{{ API_STEAM_API_KEY }}"
+      CONTACT_WEBHOOK: "{{ API_CONTACT_WEBHOOK }}"
+      JWT_KEY: "{{ API_JWT_KEY }}"
