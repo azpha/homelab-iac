@@ -87,3 +87,6 @@
     - name: Deploy Storage API
       import_tasks: tasks/storage-api.yml
       tags: storage-api_deploy
+    - name: Deploy Plausible
+      import_tasks: tasks/plausible.yml
+      tags: plausible_deploy

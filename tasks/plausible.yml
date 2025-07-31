@@ -1,0 +1,78 @@
+---
+- name: Create folder structure
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: 999
+  with_items:
+    - "{{ data_dir }}/plausible"
+    - "{{ data_dir }}/plausible/app"
+    - "{{ data_dir }}/plausible/db"
+    - "{{ data_dir }}/plausible/clickhouse"
+    - "{{ data_dir }}/plausible/clickhouse/logs"
+    - "{{ data_dir }}/plausible/clickhouse/data"
+
+- name: Create Metrics Docker Network
+  docker_network:
+    name: metrics
+
+- name: Deploy Plausible Database Docker Container
+  docker_container:
+    name: metrics_postgres
+    image: postgres:16-alpine
+    restart_policy: unless-stopped
+    recreate: true
+    volumes:
+      - "{{ data_dir }}/plausible/db:/var/lib/postgresql/data"
+    networks:
+      - name: metrics
+    env:
+      POSTGRES_PASSWORD: "postgres"
+    healthcheck:
+      test: ["CMD_SHELL", "pg_isready -U postgres"]
+      start_period: 1m
+
+- name: Deploy Plausible Clickhouse Docker Container
+  docker_container:
+    name: metrics_clickhouse
+    image: clickhouse/clickhouse-server:24.12-alpine
+    restart_policy: unless-stopped
+    recreate: true
+    networks:
+      - name: metrics
+    volumes:
+      - "{{ data_dir }}/plausible/clickhouse/data:/var/lib/clickhouse"
+      - "{{ data_dir }}/plausible/clickhouse/logs:/var/log/clickhouse"
+      - "{{ data_dir }}/plausible/clickhouse/ipv4-only.xml:/etc/clickhouse-server/config.d/ipv4-only.xml:ro"
+      - "{{ data_dir }}/plausible/clickhouse/low-resources.xml:/etc/clickhouse-server/config.d/low-resources.xml:ro"
+    env:
+      CLICKHOUSE_SKIP_USER_SETUP: "1"
+    ulimits: nofile:262144:262144
+    healthcheck:
+      test:
+        [
+          "CMD_SHELL",
+          "wget --no-verbose --tries=1 -O - http://127.0.0.1:8123/ping || exit 1",
+        ]
+      start_period: 1m
+
+- name: Deploy Plausible Docker Container
+  docker_container:
+    name: plausible
+    user: "999:nogroup"
+    image: ghcr.io/plausible/community-edition:v3.0.1
+    recreate: true
+    restart_policy: unless-stopped
+    command: sh -c "/entrypoint.sh db createdb && /entrypoint.sh db migrate && /entrypoint.sh run"
+    volumes:
+      - "{{ data_dir }}/plausible/app:/var/lib/plausible"
+    networks:
+      - name: metrics
+      - name: "{{ docker_network_name }}"
+    env:
+      TMPDIR: "/var/lib/plausible/tmp"
+      DISABLE_REGISTRATION: "true"
+      DATABASE_URL: "postgres://postgres:postgres@metrics_postgres:5432/plausible_db"
+      CLICKHOUSE_DATABASE_URL: "http://metrics_clickhouse:8123/plausible_events_db"
+      BASE_URL: "{{ PLAUSIBLE_BASE_URL }}"
+      SECRET_KEY_BASE: "{{ PLAUSIBLE_SECRET_KEY_BASE }}"
