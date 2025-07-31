@@ -1,6 +1,7 @@
 - name: Create folder structure
   file:
     path: "{{ item }}"
+    state: directory
   with_items:
     - "{{ data_dir }}/syncthing"
 
