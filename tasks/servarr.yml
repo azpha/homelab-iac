@@ -12,7 +12,7 @@
 - name: Deploy Radarr Container
   docker_container:
     name: radarr
-    image: ghcr.io/hotio/radarr
+    image: lscr.io/linuxserver/radarr:latest
     restart_policy: unless-stopped
     recreate: true
     volumes:
@@ -38,7 +38,7 @@
 - name: Deploy Lidarr Container
   docker_container:
     name: lidarr
-    image: ghcr.io/hotio/lidarr
+    image: lscr.io/linuxserver/lidarr:latest
     restart_policy: unless-stopped
     recreate: true
     volumes:
