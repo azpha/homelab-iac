@@ -16,3 +16,8 @@
       - name: homelab
     volumes:
       - "{{ data_dir }}/pocketid:/app/data"
+    env:
+      APP_URL: "{{ POCKETID_APP_URL }}"
+      TRUST_PROXY: "{{ POCKETID_TRUST_PROXY }}"
+      PUID: "{{ PUID }}"
+      PGID: "{{ PGID }}"
