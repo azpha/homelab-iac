@@ -5,9 +5,6 @@ echo $new_tasks
 echo $1 $2
 
 if [ ! -z "$new_tasks" ]; then
-  echo "Redeploying Caddy.."
-  ansible-playbook main.yml --tags "caddy_deploy" --vault-password-file ~/.vault_pass.txt
-
   for task in "${new_tasks[@]}"; do
     ansible_tag=$(echo "$task" | awk -F/ '{print $2}')
     if [[ "$ansible_tag" != "all.yml" && "$ansible_tag" != "all.template.yml" && "$ansible_tag" != "main.yml" ]] ; then
