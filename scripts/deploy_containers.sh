@@ -12,6 +12,8 @@ if [ ! -z "$new_tasks" ]; then
       if [[ "$tag" != "_deploy" ]] ; then 
         ansible-playbook main.yml --tags "$tag" --vault-password-file ~/.vault_pass.txt
       fi
+    elif [[ "$ansible_tag" == "jade.yml" || "$ansible_tag" == "jackson.yml" ]] ; then
+      ansible-playbook main.yml --tags "caddy_deploy" --vault-password-file ~/.vault_pass.txt
     fi
   done
 fi
