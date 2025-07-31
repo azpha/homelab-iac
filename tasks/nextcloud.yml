@@ -8,6 +8,10 @@
     - "{{ data_dir }}/nextcloud/data"
     - "{{ data_dir }}/nextcloud/db"
 
+- name: Create Nextcloud Docker Network
+  docker_network:
+    name: nextcloud
+
 - name: Create Nextcloud DB Docker Container
   docker_container:
     name: nc_postgresql
@@ -32,7 +36,7 @@
     restart_policy: unless-stopped
     recreate: true
     networks:
-      - name: homelab
+      - name: "{{ docker_network_name }}"
       - name: nextcloud
     volumes:
       - "{{ data_dir }}/nextcloud/data:/var/www/html"

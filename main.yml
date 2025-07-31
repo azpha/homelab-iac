@@ -90,3 +90,6 @@
     - name: Deploy Plausible
       import_tasks: tasks/plausible.yml
       tags: plausible_deploy
+    - name: Deploy Nextcloud
+      import_tasks: tasks/nextcloud.yml
+      tags: nextcloud_deploy
