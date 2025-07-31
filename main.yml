@@ -70,6 +70,9 @@
     - name: Deploy Monitoring Stack
       import_tasks: tasks/monitoring.yml
       tags: monitoring_deploy
+    - name: Deploy Syncthing
+      import_tasks: tasks/syncthing.yml
+      tags: syncthing_deploy
 
 - hosts: jackson
 
