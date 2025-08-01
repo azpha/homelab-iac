@@ -36,8 +36,8 @@
     image: ghcr.io/drop-oss/drop:v0.3.0
     recreate: true
     networks:
-      - homelab
-      - drop
+      - name: homelab
+      - name: drop
     volumes:
       - "{{ media_path }}/Media/Games/Desktop:/library"
       - "{{ data_dir }}/drop/app:/data"
