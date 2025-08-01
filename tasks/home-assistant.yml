@@ -1,0 +1,25 @@
+---
+- name: Create folder structure
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ data_dir }}/homeassistant"
+
+- name: Pull HA Docker Image
+  docker_image:
+    name: ghcr.io/home-assistant/home-assistant:stable
+    source: pull
+
+- name: Deploy Home Assistant Container
+  docker_container:
+    name: home_assistant
+    image: ghcr.io/home-assistant/home-assistant:stable
+    recreate: true
+    restart_policy: unless-stopped
+    network_mode: host
+    privileged: true
+    volumes:
+      - "{{ data_dir }}/homeassistant:/config"
+      - "/etc/localtime:/etc/localtime"
+      - "/run/dbus:/run/dbus:ro"

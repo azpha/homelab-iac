@@ -79,6 +79,9 @@
     - name: Deploy Drop
       import_tasks: tasks/drop.yml
       tags: drop_deploy
+    - name: Deploy Home Assistant
+      import_tasks: tasks/home-assistant.yml
+      tags: home-assistant_deploy
 
 - hosts: jackson
 
