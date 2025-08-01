@@ -53,6 +53,7 @@ def main():
   diff = git_diff()
 
   success = True
+  deployed = 0
   for file in diff:
     if "tasks" in file:
         task_name = file.split("/")[1].split(".")[0] + "_deploy"
@@ -61,12 +62,16 @@ def main():
         if not state:
           success = False
           break
+        else:
+          deployed += 1
 
-  if success:
+  if success and deployed > 0:
     print("\n---------------------")
     print(" Deployment succeeded!")
     print(f" Tasks: {", ".join(diff)}")
     print("---------------------\n")
+  else:
+    print("Successful, no containers required deployment")
 
 if __name__ == "__main__":
   main()
