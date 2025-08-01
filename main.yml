@@ -73,6 +73,9 @@
     - name: Deploy Syncthing
       import_tasks: tasks/syncthing.yml
       tags: syncthing_deploy
+    - name: Deploy Drop
+      import_tasks: tasks/drop.yml
+      tags: drop_deploy
 
 - hosts: jackson
 

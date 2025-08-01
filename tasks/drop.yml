@@ -1,0 +1,46 @@
+---
+- name: Create folder structure
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ data_dir }}/drop"
+    - "{{ data_dir }}/drop/db"
+    - "{{ data_dir }}/drop/app"
+
+- name: Create Drop Network
+  docker_network:
+    name: drop
+
+- name: Create Drop DB Container
+  docker_container:
+    name: drop_postgres
+    image: postgres:14-alpine
+    recreate: true
+    healthcheck:
+      test: pg_isready -d drop -U drop
+      retries: 5
+      start_period: 10s
+      interval: 30s
+      timeout: 60s
+    volumes:
+      - "{{ data_dir }}/drop/db:/var/lib/postgresql/data"
+    env:
+      POSTGRES_PASSWORD: "drop"
+      POSTGRES_USER: "drop"
+      POSTGRES_DB: "drop"
+
+- name: Create Drop Container
+  docker_container:
+    name: drop
+    image: ghcr.io/drop-oss/drop:v0.3.0
+    recreate: true
+    networks:
+      - homelab
+      - drop
+    volumes:
+      - "{{ media_path }}/Media/Games/Desktop:/library"
+      - "{{ data_dir }}/drop/app:/data"
+    env:
+      DATABASE_URL: "postgres://drop:drop@drop_postgres:5432/drop"
+      GIANT_BOMB_API_KEY: "{{ DROP_GIANT_BOMB_API_KEY }}"
