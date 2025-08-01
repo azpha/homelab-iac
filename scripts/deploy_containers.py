@@ -23,7 +23,7 @@ def run_deployment(tag = None):
     command = construct_ansible_command(tag=tag)
 
   print("Reloading Caddyfile..")
-  subprocess.run(construct_ansible_command(tag="caddyfile_deploy"))
+  subprocess.run(construct_ansible_command(tag="caddyfile_deploy"), shell=True)
   subprocess.run("docker exec -w /etc/caddy caddy caddy reload", shell=True)
 
   print(f"Running deployment for {tag}..")
