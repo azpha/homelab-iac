@@ -8,11 +8,6 @@
     - "{{ data_dir }}/caddy/data"
     - "{{ data_dir }}/caddy/certs"
 
-- name: Create Caddyfile
-  template:
-    src: Caddyfile.j2
-    dest: "{{ data_dir }}/caddy/Caddyfile"
-
 - name: Create Dockerfile
   template:
     src: Dockerfile.j2

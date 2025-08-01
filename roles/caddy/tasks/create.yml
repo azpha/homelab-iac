@@ -1,0 +1,5 @@
+---
+- name: Create Caddyfile
+  template:
+    src: roles/caddy/templates/Caddyfile.j2
+    dest: "{{ data_dir }}/caddy/Caddyfile"

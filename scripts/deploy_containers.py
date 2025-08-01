@@ -10,24 +10,23 @@ def git_diff():
   res = subprocess.run(f"git diff --name-only {args[1]} {args[2]}", capture_output=True, shell=True, text=True)
   return res.stdout.strip().split("\n")
 
-def construct_ansible_command(server_name = None, tag = None):
+def construct_ansible_command(tag = None):
   command = "ANSIBLE_CONFIG=ansible.cfg /usr/bin/ansible-playbook main.yml --vault-password-file ~/.vault_pass.txt"
 
-  if server_name:
-    command += f" -l {server_name}"
   if tag:
     command += f" --tags {tag}"
 
   return command
 
-def run_deployment(server_name = None, tag = None):
+def run_deployment(tag = None):
   if tag:
-    print(f"Deploying task '{tag}'..")
     command = construct_ansible_command(tag=tag)
-  elif server_name:
-    print(f"Deploying caddy on server '{server_name}'..")
-    command = construct_ansible_command(server_name, "caddy_server")
 
+  print("Reloading Caddyfile..")
+  subprocess.run(construct_ansible_command(tag="caddyfile_deploy"))
+  subprocess.run("docker exec -w /etc/caddy caddy caddy reload", shell=True)
+
+  print(f"Running deployment for {tag}..")
   res = subprocess.run(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
   lines = res.stdout.decode(encoding='utf-8').split("\n")
   
@@ -55,13 +54,6 @@ def main():
 
   success = True
   for file in diff:
-    if "host_vars" in file:
-        server_name = file.split("/")[1].split(".")[0]
-        state = run_deployment(server_name=server_name)
-        
-        if not state:
-          success = False
-          break
     if "tasks" in file:
         task_name = file.split("/")[1].split(".")[0] + "_deploy"
         state = run_deployment(tag=task_name)

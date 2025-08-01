@@ -7,6 +7,9 @@
       tags: gitea-runner_deploy
 
   tasks:
+    - name: Generate Caddyfile
+      import_tasks: roles/caddy/tasks/create.yml
+      tags: caddyfile_deploy
     - name: Deploy Glance
       import_tasks: tasks/glance.yml
       tags: glance_deploy
@@ -84,6 +87,9 @@
       tags: caddy_deploy
 
   tasks:
+    - name: Generate Caddyfile
+      import_tasks: roles/caddy/tasks/create.yml
+      tags: caddyfile_deploy
     - name: Deploy Gitea
       import_tasks: tasks/gitea.yml
       tags: gitea_deploy
