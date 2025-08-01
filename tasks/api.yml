@@ -70,3 +70,4 @@
       STEAM_API_KEY: "{{ API_STEAM_API_KEY }}"
       CONTACT_WEBHOOK: "{{ API_CONTACT_WEBHOOK }}"
       JWT_KEY: "{{ API_JWT_KEY }}"
+      TEST: "TESTING"

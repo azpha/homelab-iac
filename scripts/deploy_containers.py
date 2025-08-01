@@ -70,11 +70,11 @@ def main():
           success = False
           break
 
-    if success:
-      print("\n---------------------")
-      print(" Deployment succeeded!")
-      print(f" Tasks: {", ".join(diff)}")
-      print("---------------------\n")
+  if success:
+    print("\n---------------------")
+    print(" Deployment succeeded!")
+    print(f" Tasks: {", ".join(diff)}")
+    print("---------------------\n")
 
 if __name__ == "__main__":
   main()
