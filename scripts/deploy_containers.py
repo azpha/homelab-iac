@@ -30,6 +30,8 @@ def run_deployment(server_name = None, tag = None):
 
   res = subprocess.run(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
   lines = res.stdout.decode(encoding='utf-8').split("\n")
+  
+  success = True
   for ind, line in enumerate(lines):
     if "fatal:" in line:
       host = re.findall(bracket_regex, line)[0]
@@ -43,16 +45,36 @@ def run_deployment(server_name = None, tag = None):
       print(f" Reason: {reason_failed[2].split(":")[1].strip()}")
       print("---------------------\n")
 
+      success = False
+      break
+
+  return success
+
 def main():
   diff = git_diff()
 
+  success = True
   for file in diff:
     if "host_vars" in file:
         server_name = file.split("/")[1].split(".")[0]
-        run_deployment(server_name=server_name)
+        state = run_deployment(server_name=server_name)
+        
+        if not state:
+          success = False
+          break
     if "tasks" in file:
         task_name = file.split("/")[1].split(".")[0] + "_deploy"
-        run_deployment(tag=task_name)
+        state = run_deployment(tag=task_name)
+
+        if not state:
+          success = False
+          break
+
+    if success:
+      print("\n---------------------")
+      print(" Deployment succeeded!")
+      print(f" Tasks: {", ".join(diff)}")
+      print("---------------------\n")
 
 if __name__ == "__main__":
   main()
