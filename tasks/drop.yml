@@ -17,6 +17,8 @@
     name: drop_postgres
     image: postgres:14-alpine
     recreate: true
+    networks:
+      - name: drop
     healthcheck:
       test: pg_isready -d drop -U drop
       retries: 5
