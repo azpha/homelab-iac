@@ -30,7 +30,7 @@
     recreate: true
     volumes:
       - "{{ data_dir }}/servarr/sonarr_config:/config"
-      - "{{ SERVARR_MEDIA_PATH }}:/media"
+      - "{{ SERVARR_MEDIA_PATH }}:/data"
       - "{{ NZBGET_DOWNLOADS_PATH }}:/downloads"
     networks:
       - name: homelab
