@@ -22,10 +22,6 @@ def run_deployment(tag = None):
   if tag:
     command = construct_ansible_command(tag=tag)
 
-  print("Reloading Caddyfile..")
-  subprocess.run(construct_ansible_command(tag="caddyfile_deploy"), shell=True, stdout=subprocess.PIPE)
-  subprocess.run("docker exec -w /etc/caddy caddy caddy reload", shell=True)
-
   print(f"Running deployment for {tag}..")
   res = subprocess.run(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
   lines = res.stdout.decode(encoding='utf-8').split("\n")
@@ -51,6 +47,10 @@ def run_deployment(tag = None):
 
 def main():
   diff = git_diff()
+
+  print("Reloading Caddyfile..")
+  subprocess.run(construct_ansible_command(tag="caddyfile_deploy"), shell=True, stdout=subprocess.PIPE)
+  subprocess.run("docker exec -w /etc/caddy caddy caddy reload", shell=True)
 
   success = True
   deployed = 0
