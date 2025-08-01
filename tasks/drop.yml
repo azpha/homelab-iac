@@ -41,7 +41,7 @@
       - name: homelab
       - name: drop
     volumes:
-      - "{{ media_path }}/Media/Games/Desktop:/library"
+      - "{{ media_path }}/Games/Desktop:/library"
       - "{{ data_dir }}/drop/app:/data"
     env:
       DATABASE_URL: "postgres://drop:drop@drop_postgres:5432/drop"
