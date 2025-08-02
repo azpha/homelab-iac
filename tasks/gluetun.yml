@@ -24,6 +24,10 @@
       - "{{ data_dir }}/gluetun:/gluetun"
     networks:
       - name: homelab
+    published_ports:
+      - 8888:8888/tcp
+      - 8388:8388/tcp
+      - 8388:8388/ud
     env:
       VPN_SERVICE_PROVIDER: "{{ GLUETUN_VPN_SERVICE_PROVIDER }}"
       VPN_TYPE: "wireguard"
