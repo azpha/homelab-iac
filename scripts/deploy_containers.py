@@ -38,6 +38,7 @@ def run_deployment(tag = None):
       print(f" Task: {task_failed}")
       print(f" Host: {host}")
       print(f" Reason: {reason_failed[2].split(":")[1].strip()}")
+      print(line)
       print("---------------------\n")
 
       success = False
