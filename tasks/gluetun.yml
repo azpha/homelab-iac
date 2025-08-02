@@ -1,0 +1,34 @@
+---
+- name: Create folder structure
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ data_dir }}/gluetun"
+
+- name: Pull latest Gluetun Docker Image
+  docker_image:
+    name: qmcgaw/gluetun
+    tag: latest
+    source: pull
+
+- name: Deploy Gluetun Docker Container
+  docker_container:
+    name: gluetun
+    image: qmcgaw/gluetun
+    capabilities:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    volumes:
+      - "{{ data_dir }}/gluetun:/gluetun"
+    networks:
+      - name: homelab
+    env:
+      VPN_SERVICE_PROVIDER: "{{ GLUETUN_VPN_SERVICE_PROVIDER }}"
+      VPN_TYPE: "wireguard"
+      WIREGUARD_PRIVATE_KEY: "{{ GLUETUN_WIREGUARD_PRIVATE_KEY }}"
+      WIREGUARD_ADDRESSES: "{{ GLUETUN_WIREGUARD_ADDRESSES }}"
+      SERVER_COUNTRIES: "{{ GLUETUN_SERVER_COUNTRIES }}"
+      SERVER_CITIES: "{{ GLUETUN_SERVER_CITIES }}"
+      SERVER_HOSTNAMES: "{{ GLUETUN_SERVER_HOSTNAMES }}"

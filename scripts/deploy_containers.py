@@ -47,12 +47,23 @@ def run_deployment(tag = None):
 
 def main():
   diff = git_diff()
+  vpn_containers = [
+    "tasks/qbittorrent.yml"
+  ]
 
   print("Reloading Caddyfile..")
   subprocess.run(construct_ansible_command(tag="caddyfile_deploy"), shell=True, stdout=subprocess.PIPE)
 
   success = True
   deployed = 0
+
+  # auto-heal any vpn-dependent containers
+  if "tasks/gluetun.yml" in diff:
+    for container in vpn_containers:
+      if container not in diff:
+        print(f"Adding {container} to restart list as Gluetun is present..")
+        diff.append(container)
+
   for file in diff:
     if "tasks" in file:
         task_name = file.split("/")[1].split(".")[0] + "_deploy"

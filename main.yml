@@ -82,6 +82,12 @@
     - name: Deploy Home Assistant
       import_tasks: tasks/home-assistant.yml
       tags: home-assistant_deploy
+    - name: Deploy Gluetun
+      import_tasks: tasks/gluetun.yml
+      tags: gluetun_deploy
+    - name: Deploy QBittorrent
+      import_tasks: tasks/qbittorrent.yml
+      tags: qbittorrent_deploy
 
 - hosts: jackson
 
