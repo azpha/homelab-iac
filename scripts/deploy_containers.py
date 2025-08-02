@@ -80,7 +80,7 @@ def main():
     print(" Deployment succeeded!")
     print(f" Tasks: {", ".join(diff)}")
     print("---------------------\n")
-  else:
+  elif deployed == 0:
     print("Successful, no containers required deployment")
 
 if __name__ == "__main__":
