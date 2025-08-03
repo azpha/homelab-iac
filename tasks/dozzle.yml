@@ -18,3 +18,4 @@
       traefik.http.routers.dz.entrypoints: webSecure
       traefik.http.routers.dz.tls.certresolver: letsencrypt
       traefik.http.services.dz.loadbalancer.server.port: "8080"
+      traefik.http.routers.dz.middlewares: tinyauth

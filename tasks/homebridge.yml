@@ -21,3 +21,4 @@
       traefik.http.routers.bridge.entrypoints: webSecure
       traefik.http.routers.bridge.tls.certresolver: letsencrypt
       traefik.http.services.bridge.loadbalancer.server.url: "http://{{ TRAEFIK_HOST_IP }}:8581"
+      traefik.http.routers.bridge.middlewares: tinyauth

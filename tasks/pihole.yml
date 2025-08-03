@@ -15,8 +15,8 @@
     networks:
       - name: homelab
     published_ports:
-      - "{{ CADDY_HOST_IP }}:53:53/tcp"
-      - "{{ CADDY_HOST_IP }}:53:53/udp"
+      - "{{ TRAEFIK_HOST_IP }}:53:53/tcp"
+      - "{{ TRAEFIK_HOST_IP }}:53:53/udp"
     volumes:
       - "{{ data_dir }}/pihole:/etc/pihole"
     env:

@@ -29,3 +29,4 @@
       traefik.http.routers.code.entrypoints: webSecure
       traefik.http.routers.code.tls.certresolver: letsencrypt
       traefik.http.services.code.loadbalancer.server.port: "8443"
+      traefik.http.routers.code.middlewares: tinyauth

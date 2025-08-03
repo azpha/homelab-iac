@@ -16,3 +16,4 @@
       traefik.http.routers.cup.entrypoints: webSecure
       traefik.http.routers.cup.tls.certresolver: letsencrypt
       traefik.http.services.cup.loadbalancer.server.port: "8000"
+      traefik.http.routers.cup.middlewares: tinyauth

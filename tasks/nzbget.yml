@@ -29,3 +29,4 @@
       traefik.http.routers.nzb.entrypoints: webSecure
       traefik.http.routers.nzb.tls.certresolver: letsencrypt
       traefik.http.services.nzb.loadbalancer.server.port: "6789"
+      traefik.http.routers.nzb.middlewares: tinyauth
