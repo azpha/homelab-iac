@@ -61,3 +61,9 @@
       REDIS_HOSTNAME: "immich_redis"
       DB_PASSWORD: "{{ IMMICH_DB_PASSWORD }}"
       DB_USERNAME: "{{ IMMICH_DB_USERNAME }}"
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.img.rule: Host(`img.fntz.net`)
+      traefik.http.routers.img.entrypoints: webSecure
+      traefik.http.routers.img.tls.certresolver: letsencrypt
+      traefik.http.services.img.loadbalancer.server.port: "2283"

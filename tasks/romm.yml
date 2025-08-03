@@ -61,3 +61,9 @@
       OIDC_CLIENT_SECRET: "{{ ROMM_OIDC_CLIENT_SECRET }}"
       OIDC_REDIRECT_URL: "{{ ROMM_OIDC_REDIRECT_URL }}"
       SERVER_APPLICATION_URL: "{{ ROMM_SERVER_APPLICATION_URL }}"
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.emu.rule: Host(`emu.fntz.net`)
+      traefik.http.routers.emu.entrypoints: webSecure
+      traefik.http.routers.emu.tls.certresolver: letsencrypt
+      traefik.http.services.emu.loadbalancer.server.port: "8080"

@@ -23,3 +23,9 @@
       TZ: "{{ TZ }}"
       PUID: "{{ PUID }}"
       PGID: "{{ PGID }}"
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.nzb.rule: Host(`nzb.fntz.net`)
+      traefik.http.routers.nzb.entrypoints: webSecure
+      traefik.http.routers.nzb.tls.certresolver: letsencrypt
+      traefik.http.services.nzb.loadbalancer.server.port: "6789"

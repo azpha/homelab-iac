@@ -20,3 +20,9 @@
       PUID: "{{ PUID }}"
       PGID: "{{ PGID }}"
       TZ: "{{ TZ }}"
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.tt.rule: Host(`tt.fntz.net`)
+      traefik.http.routers.tt.entrypoints: webSecure
+      traefik.http.routers.tt.tls.certresolver: letsencrypt
+      traefik.http.services.tt.loadbalancer.server.port: "8181"

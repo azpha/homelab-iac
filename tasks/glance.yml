@@ -25,3 +25,9 @@
       - "{{ data_dir }}/glance/config:/app/config"
       - "{{ data_dir }}/glance/assets:/app/assets"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.glance.rule: Host(`fntz.net`)
+      traefik.http.routers.glance.entrypoints: webSecure
+      traefik.http.routers.glance.tls.certresolver: letsencrypt
+      traefik.http.services.glance.loadbalancer.server.port: "8080"

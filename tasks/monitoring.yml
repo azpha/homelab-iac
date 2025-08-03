@@ -26,6 +26,12 @@
       - "{{ data_dir }}/monitoring/grafana:/var/lib/grafana"
     env:
       GF_AUTH_ANONYMOUS_ENABLED: "{{ GRAFANA_AUTH_ANONYMOUS_ENABLED }}"
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.graf.rule: Host(`graf.fntz.net`)
+      traefik.http.routers.graf.entrypoints: webSecure
+      traefik.http.routers.graf.tls.certresolver: letsencrypt
+      traefik.http.services.graf.loadbalancer.server.port: "3000"
 
 - name: Copy Prometheus Config
   template:

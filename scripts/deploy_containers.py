@@ -52,9 +52,6 @@ def main():
     "tasks/qbittorrent.yml"
   ]
 
-  print("Reloading Caddyfile..")
-  subprocess.run(construct_ansible_command(tag="caddyfile_deploy"), shell=True, stdout=subprocess.PIPE)
-
   success = True
   deployed = 0
 

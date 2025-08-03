@@ -18,3 +18,9 @@
       - "{{ data_dir }}/vaultwarden:/data"
     env:
       DOMAIN: "{{ VAULTWARDEN_DOMAIN }}"
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.vw.rule: Host(`vw.fntz.net`)
+      traefik.http.routers.vw.entrypoints: webSecure
+      traefik.http.routers.vw.tls.certresolver: letsencrypt
+      traefik.http.services.vw.loadbalancer.server.port: "80"

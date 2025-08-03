@@ -10,3 +10,9 @@
       - name: homelab
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.cup.rule: Host(`cup.fntz.net`)
+      traefik.http.routers.cup.entrypoints: webSecure
+      traefik.http.routers.cup.tls.certresolver: letsencrypt
+      traefik.http.services.cup.loadbalancer.server.port: "8000"

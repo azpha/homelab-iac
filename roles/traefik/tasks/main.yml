@@ -1,0 +1,47 @@
+---
+- name: Create folder structure
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ data_dir }}/traefik"
+    - "{{ data_dir }}/traefik/data"
+    - "{{ data_dir }}/traefik/config"
+
+- name: Pull latest Traefik Docker Image
+  docker_image:
+    name: traefik
+    tag: latest
+    source: pull
+
+- name: Create Traefik Configuration
+  template:
+    src: config.yml.j2
+    dest: "{{ data_dir }}/traefik/traefik.yml"
+
+- name: Deploy Traefik Docker Container
+  docker_container:
+    name: traefik
+    image: traefik
+    restart_policy: unless-stopped
+    command:
+      - --providers.file.directory=/config
+    published_ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+    env:
+      CF_API_EMAIL: "{{ TRAEFIK_CF_API_EMAIL }}"
+      CF_DNS_API_TOKEN: "{{ TRAEFIK_CF_API_KEY }}"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - "{{ data_dir }}/traefik/data:/data"
+      - "{{ data_dir }}/traefik/traefik.yml:/traefik.yml"
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.traefik.rule: Host(`traefik.fntz.net`)
+      traefik.http.routers.traefik.entrypoints: webSecure
+      traefik.http.routers.traefik.tls.certresolver: letsencrypt
+      traefik.http.services.traefik.loadbalancer.server.port: "8080"
+    networks:
+      - name: homelab

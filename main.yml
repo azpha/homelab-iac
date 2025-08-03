@@ -1,15 +1,12 @@
 - hosts: jade
 
   roles:
-    - role: caddy
-      tags: caddy_deploy
+    - role: traefik
+      tags: traefik_deploy
     - role: gitea-runner
       tags: gitea-runner_deploy
 
   tasks:
-    - name: Generate Caddyfile
-      import_tasks: roles/caddy/tasks/create.yml
-      tags: caddyfile_deploy
     - name: Deploy Glance
       import_tasks: tasks/glance.yml
       tags: glance_deploy
@@ -73,9 +70,6 @@
     - name: Deploy Monitoring Stack
       import_tasks: tasks/monitoring.yml
       tags: monitoring_deploy
-    - name: Deploy Syncthing
-      import_tasks: tasks/syncthing.yml
-      tags: syncthing_deploy
     - name: Deploy Drop
       import_tasks: tasks/drop.yml
       tags: drop_deploy

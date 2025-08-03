@@ -21,3 +21,9 @@
       TRUST_PROXY: "{{ POCKETID_TRUST_PROXY }}"
       PUID: "{{ PUID }}"
       PGID: "{{ PGID }}"
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.oidc.rule: Host(`oidc.fntz.net`)
+      traefik.http.routers.oidc.entrypoints: webSecure
+      traefik.http.routers.oidc.tls.certresolver: letsencrypt
+      traefik.http.services.oidc.loadbalancer.server.port: "1411"

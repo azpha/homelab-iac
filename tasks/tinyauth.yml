@@ -21,3 +21,9 @@
       OAUTH_WHITELIST: "{{ TINYAUTH_OAUTH_WHITELIST }}"
       APP_TITLE: "{{ TINYAUTH_APP_TITLE }}"
       BACKGROUND_IMAGE: "{{ TINYAUTH_BACKGROUND_IMAGE }}"
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.tinyauth.rule: Host(`auth.fntz.net`)
+      traefik.http.routers.tt.entrypoints: webSecure
+      traefik.http.routers.tt.tls.certresolver: letsencrypt
+      traefik.http.middlewares.tinyauth.forwardauth.address: http://tinyauth:3000/api/auth/traefik

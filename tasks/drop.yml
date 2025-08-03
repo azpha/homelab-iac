@@ -46,3 +46,9 @@
     env:
       DATABASE_URL: "postgres://drop:drop@drop_postgres:5432/drop"
       GIANT_BOMB_API_KEY: "{{ DROP_GIANT_BOMB_API_KEY }}"
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.drop.rule: Host(`games.fntz.net`)
+      traefik.http.routers.drop.entrypoints: webSecure
+      traefik.http.routers.drop.tls.certresolver: letsencrypt
+      traefik.http.services.drop.loadbalancer.server.port: "3000"

@@ -23,3 +23,8 @@
     env:
       UPSTREAM_BASE_URL: "{{ NTFY_UPSTREAM_BASE_URL }}"
       BASE_URL: "{{ NTFY_BASE_URL }}"
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.ntfy.rule: Host(`push.fntz.net`)
+      traefik.http.routers.ntfy.entrypoints: webSecure
+      traefik.http.routers.ntfy.tls.certresolver: letsencrypt

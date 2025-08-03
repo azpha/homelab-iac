@@ -22,3 +22,9 @@
     env:
       FTLCONF_webserver_api_password: "{{ PIHOLE_FTLCONF_WEBSERVER_API_PASSWORD }}"
       TZ: "{{ TZ }}"
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.pihole.rule: Host(`pihole.fntz.net`)
+      traefik.http.routers.pihole.entrypoints: webSecure
+      traefik.http.routers.pihole.tls.certresolver: letsencrypt
+      traefik.http.services.pihole.loadbalancer.server.port: "80"

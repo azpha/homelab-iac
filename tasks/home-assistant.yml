@@ -23,3 +23,9 @@
       - "{{ data_dir }}/homeassistant:/config"
       - "/etc/localtime:/etc/localtime"
       - "/run/dbus:/run/dbus:ro"
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.ha.rule: Host(`ha.fntz.net`)
+      traefik.http.routers.ha.entrypoints: webSecure
+      traefik.http.routers.ha.tls.certresolver: letsencrypt
+      traefik.http.services.ha.loadbalancer.server.url: "http://{{ TRAEFIK_HOST_IP }}:8123"

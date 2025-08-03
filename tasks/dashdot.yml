@@ -9,3 +9,9 @@
       - name: homelab
     volumes:
       - "/:/mnt/host:ro"
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.dash.rule: Host(`stats.fntz.net`)
+      traefik.http.routers.dash.entrypoints: webSecure
+      traefik.http.routers.dash.tls.certresolver: letsencrypt
+      traefik.http.services.dash.loadbalancer.server.port: "3001"
