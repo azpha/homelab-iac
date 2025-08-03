@@ -14,6 +14,8 @@
     recreate: true
     networks:
       - name: homelab
+    published_ports:
+      - 8096:8096
     volumes:
       - "{{ data_dir }}/jellyfin:/config"
       - "{{ JELLYFIN_TV_PATH }}:/data/tvshows"
