@@ -40,3 +40,9 @@
       - name: nextcloud
     volumes:
       - "{{ data_dir }}/nextcloud/data:/var/www/html"
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.nc.rule: Host(`{{ NEXTCLOUD_APP_URL }}`)
+      traefik.http.routers.nc.entrypoints: webSecure
+      traefik.http.routers.nc.tls.certresolver: letsencrypt
+      traefik.http.services.nc.loadbalancer.server.port: "80"
