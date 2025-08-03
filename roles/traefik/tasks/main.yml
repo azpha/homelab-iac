@@ -24,6 +24,7 @@
     name: traefik
     image: traefik
     restart_policy: unless-stopped
+    recreate: true
     command:
       - --providers.file.directory=/config
     published_ports:
@@ -39,9 +40,9 @@
       - "{{ data_dir }}/traefik/traefik.yml:/traefik.yml"
     labels:
       traefik.enable: "true"
-      traefik.http.routers.traefik.rule: Host(`traefik.fntz.net`)
+      traefik.http.routers.traefik.rule: "Host(`{{ TRAEFIK_DASH_URL }}`)"
       traefik.http.routers.traefik.entrypoints: webSecure
       traefik.http.routers.traefik.tls.certresolver: letsencrypt
       traefik.http.services.traefik.loadbalancer.server.port: "8080"
     networks:
-      - name: homelab
+      - name: "{{ docker_network_name }}"

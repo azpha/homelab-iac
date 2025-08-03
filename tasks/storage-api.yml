@@ -36,3 +36,9 @@
     env:
       TZ: "{{ TZ }}"
       TOKEN: "{{ API_ADMIN_KEY }}"
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.storage.rule: Host(`storage.alexav.gg`)
+      traefik.http.routers.storage.entrypoints: webSecure
+      traefik.http.routers.storage.tls.certresolver: letsencrypt
+      traefik.http.services.storage.loadbalancer.server.port: "3001"

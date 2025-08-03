@@ -86,13 +86,10 @@
 - hosts: jackson
 
   roles:
-    - role: caddy
-      tags: caddy_deploy
+    - role: traefik
+      tags: traefik_deploy
 
   tasks:
-    - name: Generate Caddyfile
-      import_tasks: roles/caddy/tasks/create.yml
-      tags: caddyfile_deploy
     - name: Deploy Gitea
       import_tasks: tasks/gitea.yml
       tags: gitea_deploy

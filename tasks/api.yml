@@ -70,3 +70,9 @@
       STEAM_API_KEY: "{{ API_STEAM_API_KEY }}"
       CONTACT_WEBHOOK: "{{ API_CONTACT_WEBHOOK }}"
       JWT_KEY: "{{ API_JWT_KEY }}"
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.aapi.rule: Host(`api.alexav.gg`)
+      traefik.http.routers.aapi.entrypoints: webSecure
+      traefik.http.routers.aapi.tls.certresolver: letsencrypt
+      traefik.http.services.aapi.loadbalancer.server.port: "3000"

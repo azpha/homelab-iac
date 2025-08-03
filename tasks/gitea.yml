@@ -22,3 +22,9 @@
     env:
       USER_UID: "1000"
       USER_GID: "1000"
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.git.rule: Host(`git.alexav.gg`)
+      traefik.http.routers.git.entrypoints: webSecure
+      traefik.http.routers.git.tls.certresolver: letsencrypt
+      traefik.http.services.git.loadbalancer.server.port: "3000"

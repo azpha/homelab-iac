@@ -76,3 +76,9 @@
       CLICKHOUSE_DATABASE_URL: "http://metrics_clickhouse:8123/plausible_events_db"
       BASE_URL: "{{ PLAUSIBLE_BASE_URL }}"
       SECRET_KEY_BASE: "{{ PLAUSIBLE_SECRET_KEY_BASE }}"
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.metrics.rule: Host(`metrics.alexav.gg`)
+      traefik.http.routers.metrics.entrypoints: webSecure
+      traefik.http.routers.metrics.tls.certresolver: letsencrypt
+      traefik.http.services.metrics.loadbalancer.server.port: "8000"
