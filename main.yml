@@ -105,3 +105,17 @@
     - name: Deploy Nextcloud
       import_tasks: tasks/nextcloud.yml
       tags: nextcloud_deploy
+
+- hosts: nas
+
+  roles:
+    - role: traefik
+      tags: traefik_deploy
+
+  tasks:
+    - name: Deploy Plex
+      import_tasks: tasks/plex.yml
+      tags: plex_deploy
+    - name: Deploy Frigate
+      import_tasks: tasks/frigate.yml
+      tags: frigate_deploy

@@ -1,0 +1,42 @@
+---
+- name: Create folder structure
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ data_dir }}/frigate"
+
+- name: Pull latest Frigate Docker Image
+  docker_image:
+    name: ghcr.io/blakeblackshear/frigate
+    tag: stable
+    source: pull
+
+- name: Deploy Frigate Docker Container
+  docker_container:
+    name: frigate
+    image: ghcr.io/blakeblackshear/frigate:stable
+    recreate: true
+    privileged: true
+    restart_policy: unless-stopped
+    published_ports:
+      - "5000:5000"
+      - "8555:8555/tcp"
+      - "8555:8555/udp"
+      - "8554:8554"
+    devices:
+      - /dev/dri/renderD128:/dev/dri/renderD128
+    networks:
+      - name: "{{ docker_network_name }}"
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - "{{ data_dir }}/frigate:/config"
+      - "{{ FRIGATE_RECORDINGS_PATH }}:/media/frigate"
+    networks:
+      - name: "{{ docker_network_name }}"
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.frigate.rule: Host(`nvr.fntz.net`)
+      traefik.http.routers.frigate.entrypoints: webSecure
+      traefik.http.routers.frigate.tls.certresolver: letsencrypt
+      traefik.http.services.frigate.loadbalancer.server.port: "5000"

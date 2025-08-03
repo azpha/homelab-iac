@@ -1,0 +1,38 @@
+---
+- name: Create folder structure
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ data_dir }}/plex"
+
+- name: Pull latest Plex Docker Image
+  docker_image:
+    name: lscr.io/linuxserver/plex
+    tag: latest
+    source: pull
+
+- name: Deploy Plex Docker Container
+  docker_container:
+    name: plex
+    image: lscr.io/linuxserver/plex
+    network_mode: host
+    restart_policy: unless-stopped
+    recreate: true
+    devices:
+      - /dev/dri:/dev/dri
+    env:
+      PUID: "{{ PUID }}"
+      PGID: "{{ PGID }}"
+      TZ: "{{ TZ }}"
+      VERSION: "docker"
+      PLEX_CLAIM: "{{ PLEX_CLAIM_TOKEN }}"
+    volumes:
+      - "{{ data_dir }}/plex:/config"
+      - "{{ media_path }}:/media"
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.plex.rule: Host(`tv.fntz.net`)
+      traefik.http.routers.plex.entrypoints: webSecure
+      traefik.http.routers.plex.tls.certresolver: letsencrypt
+      traefik.http.services.plex.loadbalancer.server.url: "http://172.16.0.29:32400"
