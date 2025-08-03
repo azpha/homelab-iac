@@ -24,6 +24,6 @@
     labels:
       traefik.enable: "true"
       traefik.http.routers.tinyauth.rule: Host(`auth.fntz.net`)
-      traefik.http.routers.tt.entrypoints: webSecure
-      traefik.http.routers.tt.tls.certresolver: letsencrypt
+      traefik.http.routers.tinyauth.entrypoints: webSecure
+      traefik.http.routers.tinyauth.tls.certresolver: letsencrypt
       traefik.http.middlewares.tinyauth.forwardauth.address: http://tinyauth:3000/api/auth/traefik
