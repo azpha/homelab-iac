@@ -75,4 +75,4 @@
       traefik.http.routers.aapi.rule: Host(`api.alexav.gg`)
       traefik.http.routers.aapi.entrypoints: webSecure
       traefik.http.routers.aapi.tls.certresolver: letsencrypt
-      traefik.http.services.aapi.loadbalancer.server.port: "3000"
+      traefik.http.services.aapi.loadbalancer.server.url: http://api:3000
