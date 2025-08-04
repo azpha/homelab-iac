@@ -29,7 +29,13 @@
       - name: homelab
     labels:
       traefik.enable: "true"
+
       traefik.http.routers.read.rule: Host(`read.fntz.net`)
       traefik.http.routers.read.entrypoints: webSecure
       traefik.http.routers.read.tls.certresolver: letsencrypt
       traefik.http.services.read.loadbalancer.server.port: "2202"
+
+      traefik.http.routers.readadm.rule: Host(`read-adm.fntz.net`)
+      traefik.http.routers.readadm.entrypoints: webSecure
+      traefik.http.routers.readadm.tls.certresolver: letsencrypt
+      traefik.http.services.readadm.loadbalancer.server.port: "2203"

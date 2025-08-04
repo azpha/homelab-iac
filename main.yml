@@ -85,6 +85,9 @@
     - name: Deploy Calibre
       import_tasks: tasks/calibre-web.yml
       tags: calibre-web_deploy
+    - name: Deploy Ubooquity
+      import_tasks: tasks/ubooquity.yml
+      tags: ubooquity_deploy
 
 - hosts: jackson
 
