@@ -28,9 +28,9 @@
       DOCKER_MODS: linuxserver/mods:universal-calibre
     networks:
       - name: homelab
-    labels:
-      traefik.enable: "true"
-      traefik.http.routers.read.rule: Host(`read.fntz.net`)
-      traefik.http.routers.read.entrypoints: webSecure
-      traefik.http.routers.read.tls.certresolver: letsencrypt
-      traefik.http.services.read.loadbalancer.server.port: "8083"
+    # labels:
+    # traefik.enable: "true"
+    # traefik.http.routers.read.rule: Host(`read.fntz.net`)
+    # traefik.http.routers.read.entrypoints: webSecure
+    # traefik.http.routers.read.tls.certresolver: letsencrypt
+    # traefik.http.services.read.loadbalancer.server.port: "8083"
