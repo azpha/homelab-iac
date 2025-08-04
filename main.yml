@@ -82,6 +82,9 @@
     - name: Deploy QBittorrent
       import_tasks: tasks/qbittorrent.yml
       tags: qbittorrent_deploy
+    - name: Deploy Calibre
+      import_tasks: tasks/calibre-web.yml
+      tags: calibre-web_deploy
 
 - hosts: jackson
 
