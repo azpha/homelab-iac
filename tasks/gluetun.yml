@@ -41,11 +41,13 @@
       traefik.enable: "true"
 
       traefik.http.routers.qbit.rule: Host(`qbit.fntz.net`)
+      traefik.http.routers.qbit.service: qbit
       traefik.http.routers.qbit.entrypoints: webSecure
       traefik.http.routers.qbit.tls.certresolver: letsencrypt
       traefik.http.services.qbit.loadbalancer.server.port: "8090"
 
       traefik.http.routers.jackett.rule: Host(`jackett.fntz.net`)
+      traefik.http.routers.jackett.service: qbit
       traefik.http.routers.jackett.entrypoints: webSecure
       traefik.http.routers.jackett.tls.certresolver: letsencrypt
       traefik.http.services.jackett.loadbalancer.server.port: "9117"

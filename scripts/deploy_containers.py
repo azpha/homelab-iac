@@ -48,7 +48,8 @@ def run_deployment(tag = None):
 def main():
   diff = git_diff()
   vpn_containers = [
-    "tasks/qbittorrent.yml"
+    "tasks/qbittorrent.yml",
+    "tasks/jackett.yml"
   ]
 
   success = True
