@@ -37,3 +37,9 @@
       SERVER_COUNTRIES: "{{ GLUETUN_SERVER_COUNTRIES }}"
       SERVER_CITIES: "{{ GLUETUN_SERVER_CITIES }}"
       SERVER_HOSTNAMES: "{{ GLUETUN_SERVER_HOSTNAMES }}"
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.qbit.rule: Host(`qbit.fntz.net`)
+      traefik.http.routers.qbit.entrypoints: webSecure
+      traefik.http.routers.qbit.tls.certresolver: letsencrypt
+      traefik.http.services.qbit.loadbalancer.server.port: "8090"
