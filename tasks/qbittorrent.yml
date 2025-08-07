@@ -17,6 +17,7 @@
     name: qbittorrent
     image: lscr.io/linuxserver/qbittorrent
     network_mode: "container:gluetun"
+    recreate: true
     env:
       PUID: "{{ PUID }}"
       PGID: "{{ PGID }}"
