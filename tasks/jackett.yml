@@ -18,8 +18,7 @@
     image: lscr.io/linuxserver/jackett
     recreate: true
     restart_policy: unless-stopped
-    networks:
-      - name: homelab
+    network_mode: "container:gluetun"
     volumes:
       - "{{ data_dir }}/jackett:/config"
       - "{{ media_path}}/Downloads:/downloads"
@@ -27,9 +26,3 @@
       PUID: "{{ PUID }}"
       PGID: "{{ PGID }}"
       TZ: "{{ TZ }}"
-    labels:
-      traefik.enable: "true"
-      traefik.http.routers.jackett.rule: Host(`jackett.fntz.net`)
-      traefik.http.routers.jackett.entrypoints: webSecure
-      traefik.http.routers.jackett.tls.certresolver: letsencrypt
-      traefik.http.services.jackett.loadbalancer.server.port: "9117"
