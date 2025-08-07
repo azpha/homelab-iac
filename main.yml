@@ -85,6 +85,9 @@
     - name: Deploy Kavita
       import_tasks: tasks/kavita.yml
       tags: kavita_deploy
+    - name: Deploy Jackett
+      import_tasks: tasks/jackett.yml
+      tags: jackett_deploy
 
 - hosts: jackson
 
