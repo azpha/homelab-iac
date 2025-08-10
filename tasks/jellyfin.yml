@@ -6,6 +6,12 @@
   with_items:
     - "{{ data_dir }}/jellyfin"
 
+- name: Pull latest Jellyfin Docker Image
+  docker_image:
+    name: lscr.io/linuxserver/jellyfin
+    tag: latest
+    source: pull
+
 - name: Create Jellyfin Docker Container
   docker_container:
     name: jellyfin

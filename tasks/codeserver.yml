@@ -6,6 +6,12 @@
   with_items:
     - "{{ data_dir }}/code-server"
 
+- name: Pull latest Code Server Docker Image
+  docker_image:
+    name: lscr.io/linuxserver/code-server
+    tag: latest
+    source: pull
+
 - name: Create Code Server Docker Container
   docker_container:
     name: codeserver

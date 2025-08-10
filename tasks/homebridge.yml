@@ -6,6 +6,12 @@
   with_items:
     - "{{ data_dir }}/homebridge"
 
+- name: Pull latest Homebridge Docker Image
+  docker_image:
+    name: homebridge/homebridge
+    tag: latest
+    source: pull
+
 - name: Create Homebridge Docker Container
   docker_container:
     name: homebridge

@@ -1,4 +1,10 @@
 ---
+- name: Pull latest Cup Docker Image
+  docker_image:
+    name: ghcr.io/sergi0g/cup
+    tag: latest
+    source: pull
+
 - name: Create Cup Docker Container
   docker_container:
     name: Cup

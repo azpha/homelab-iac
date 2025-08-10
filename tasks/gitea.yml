@@ -6,6 +6,12 @@
   with_items:
     - "{{ data_dir }}/gitea"
 
+- name: Pull latest Gitea Docker Image
+  docker_image:
+    name: docker.gitea.com/gitea
+    tag: latest
+    source: pull
+
 - name: Create Gitea Docker Container
   docker_container:
     name: gitea

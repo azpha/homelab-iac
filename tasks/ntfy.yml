@@ -8,6 +8,12 @@
     - "{{ data_dir }}/ntfy/cache"
     - "{{ data_dir }}/ntfy/data"
 
+- name: Pull latest Ntfy Docker Image
+  docker_image:
+    name: binwiederhier/ntfy
+    tag: latest
+    source: pull
+
 - name: Create Ntfy Docker Container
   docker_container:
     name: ntfy

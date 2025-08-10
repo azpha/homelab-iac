@@ -6,6 +6,12 @@
   with_items:
     - "{{ data_dir }}/nzbget"
 
+- name: Pull latest NZBGet Docker Image
+  docker_image:
+    name: lscr.io/linuxserver/nzbget
+    tag: latest
+    source: pull
+
 - name: Create NZBGet Docker Container
   docker_container:
     name: nzbget

@@ -1,4 +1,10 @@
 ---
+- name: Pull latest Dozzle Docker Image
+  docker_image:
+    name: amir20/dozzle
+    tag: latest
+    source: pull
+
 - name: Create Dozzle Docker Container
   docker_container:
     name: dozzle

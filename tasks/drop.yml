@@ -12,6 +12,12 @@
   docker_network:
     name: drop
 
+- name: Pull latest Drop Docker Image
+  docker_image:
+    name: ghcr.io/drop-oss/drop
+    tag: v0.3.0
+    source: pull
+
 - name: Create Drop DB Container
   docker_container:
     name: drop_postgres

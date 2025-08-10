@@ -12,6 +12,27 @@
   docker_network:
     name: monitoring
 
+- name: Pull latest Grafana Docker Image
+  docker_image:
+    name: grafana/grafana
+    tag: latest
+    source: pull
+- name: Pull latest Prometheus Docker Image
+  docker_image:
+    name: prom/prometheus
+    tag: latest
+    source: pull
+- name: Pull latest CAdvisor Docker Image
+  docker_image:
+    name: gcr.io/cadvisor/cadvisor
+    tag: latest
+    source: pull
+- name: Pull latest Node Exporter Docker Image
+  docker_image:
+    name: prom/node-exporter
+    tag: latest
+    source: pull
+
 - name: Create Grafana Docker Container
   docker_container:
     name: grafana

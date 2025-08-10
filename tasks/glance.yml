@@ -8,6 +8,12 @@
     - "{{ data_dir }}/glance/config"
     - "{{ data_dir }}/glance/assets"
 
+- name: Pull latest Glance Docker Image
+  docker_image:
+    name: glanceapp/glance
+    tag: latest
+    source: pull
+
 - name: Create Glance Docker Container
   docker_container:
     name: glance

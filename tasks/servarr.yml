@@ -9,6 +9,22 @@
     - "{{ data_dir }}/servarr/radarr_config"
     - "{{ data_dir }}/servarr/lidarr_config"
 
+- name: Pull latest Radarr Docker Image
+  docker_image:
+    name: lscr.io/linuxserver/radarr
+    tag: latest
+    source: pull
+- name: Pull latest Sonarr Docker Image
+  docker_image:
+    name: lscr.io/linuxserver/sonarr
+    tag: latest
+    source: pull
+- name: Pull latest Lidarr Docker Image
+  docker_image:
+    name: lscr.io/linuxserver/lidarr
+    tag: latest
+    source: pull
+
 - name: Deploy Radarr Container
   docker_container:
     name: radarr

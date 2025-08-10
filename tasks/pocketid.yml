@@ -6,6 +6,12 @@
   with_items:
     - "{{ data_dir }}/pocketid"
 
+- name: Pull latest PocketID Docker Image
+  docker_image:
+    name: ghcr.io/pocket-id/pocket-id
+    tag: v1
+    source: pull
+
 - name: Create PocketID Docker Container
   docker_container:
     name: pocketid

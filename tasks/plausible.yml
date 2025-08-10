@@ -16,6 +16,12 @@
   docker_network:
     name: metrics
 
+- name: Pull latest Plausible Docker Image
+  docker_image:
+    name: ghcr.io/plausible/community-edition
+    tag: v3.0.1
+    source: pull
+
 - name: Deploy Plausible Database Docker Container
   docker_container:
     name: metrics_postgres

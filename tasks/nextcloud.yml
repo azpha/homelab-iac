@@ -12,6 +12,12 @@
   docker_network:
     name: nextcloud
 
+- name: Pull latest Nextcloud Docker Image
+  docker_image:
+    name: nextcloud
+    tag: latest
+    source: pull
+
 - name: Create Nextcloud DB Docker Container
   docker_container:
     name: nc_postgresql

@@ -6,6 +6,12 @@
   with_items:
     - "{{ data_dir }}/vaultwarden"
 
+- name: Pull latest Vaultwarden Docker Image
+  docker_image:
+    name: vaultwarden/server
+    tag: latest
+    source: pull
+
 - name: Create Vaultwarden Docker Container
   docker_container:
     name: vaultwarden

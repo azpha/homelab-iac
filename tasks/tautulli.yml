@@ -6,6 +6,12 @@
   with_items:
     - "{{ data_dir }}/tautulli"
 
+- name: Pull latest Tautulli Docker Image
+  docker_image:
+    name: ghcr.io/tautulli/tautulli
+    tag: latest
+    source: pull
+
 - name: Create Tautulli Docker Container
   docker_container:
     name: tautulli

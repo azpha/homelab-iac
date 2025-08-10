@@ -10,6 +10,12 @@
     - "{{ data_dir }}/romm/config"
     - "{{ data_dir }}/romm/db"
 
+- name: Pull latest Romm Docker Image
+  docker_image:
+    name: rommapp/romm
+    tag: v1
+    source: pull
+
 - name: Create Romm DB Docker Container
   docker_container:
     name: romm-db

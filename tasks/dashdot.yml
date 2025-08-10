@@ -1,4 +1,10 @@
 ---
+- name: Pull latest Dashdot Docker Image
+  docker_image:
+    name: mauricenino/dashdot
+    tag: latest
+    source: pull
+
 - name: Create Dashdot Docker Container
   docker_container:
     name: dashdot

@@ -1,4 +1,10 @@
 ---
+- name: Pull latest Tinyauth Docker Image
+  docker_image:
+    name: ghcr.io/steveiliop56/tinyauth
+    tag: v3
+    source: pull
+
 - name: Create Tinyauth Docker Container
   docker_container:
     name: tinyauth

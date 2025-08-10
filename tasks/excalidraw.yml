@@ -1,4 +1,10 @@
 ---
+- name: Pull latest Excalidraw Docker Image
+  docker_image:
+    name: excalidraw/excalidraw
+    tag: latest
+    source: pull
+
 - name: Create Excalidraw Docker Container
   docker_container:
     name: excalidraw
