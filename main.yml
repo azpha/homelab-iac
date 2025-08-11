@@ -3,8 +3,6 @@
   roles:
     - role: traefik
       tags: traefik_deploy
-    - role: gitea-runner
-      tags: gitea-runner_deploy
 
   tasks:
     - name: Deploy Glance
