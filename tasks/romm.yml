@@ -13,7 +13,7 @@
 - name: Pull latest Romm Docker Image
   docker_image:
     name: rommapp/romm
-    tag: v1
+    tag: latest
     source: pull
 
 - name: Create Romm DB Docker Container
