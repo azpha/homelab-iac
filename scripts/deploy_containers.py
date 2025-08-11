@@ -29,19 +29,13 @@ def run_deployment(tag = None):
   success = True
   for ind, line in enumerate(lines):
     if "fatal:" in line:
+      success = False
       host = re.findall(bracket_regex, line)[0]
       task_failed = re.findall(bracket_regex, lines[ind - 1])[0]
       reason_failed = re.findall(quote_regex, line)
 
-      print("\n---------------------")
-      print(" Deployment failed!")
-      print(f" Task: {task_failed}")
-      print(f" Host: {host}")
-      print(f" Reason: {reason_failed}")
-      print(line)
-      print("---------------------\n")
-
-      sys.exit(1)
+      print(f"\n{tag} failed deployment!\n{host}\n{reason_failed}\n{task_failed}\n")
+      break
 
   return success
 
