@@ -86,6 +86,9 @@
     - name: Deploy Jackett
       import_tasks: tasks/jackett.yml
       tags: jackett_deploy
+    - name: Deploy NFL Proxy
+      import_tasks: tasks/nfl-proxy.yml
+      tags: nfl-proxy_deploy
 
 - hosts: jackson
 

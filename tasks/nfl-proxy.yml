@@ -1,0 +1,22 @@
+---
+- name: Create folder structure
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ data_dir }}/nfl-proxy"
+
+- name: "Clone latest NFL-Proxy"
+  git:
+    repo: "git@git.alexav.gg:alex/nfl-proxy.git"
+    dest: "{{ data_dir }}/nfl-proxy"
+
+- name: "Stop & remove existing PM2 containers"
+  shell: |
+    pm2 delete nfl-proxy
+
+- name: "Start new PM2 container"
+  args:
+    chdir: "{{ data_dir }}/nfl-proxy"
+  shell: |
+    pm2 start --name="nfl-proxy" "python3 main.py"
