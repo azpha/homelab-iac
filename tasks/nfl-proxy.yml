@@ -12,6 +12,7 @@
     dest: "{{ data_dir }}/nfl-proxy"
 
 - name: "Stop & remove existing PM2 containers"
+  ignore_errors: true
   shell: |
     /home/alex/.nvm/versions/node/v24.4.0/bin/pm2 delete nfl-proxy
 
