@@ -12,12 +12,12 @@
     dest: "{{ data_dir }}/nfl-proxy"
 
 - name: "Stop & remove existing PM2 containers"
-  ignore_errors: true
+  ignore_errors: yes
   shell: |
-    /home/alex/.nvm/versions/node/v24.4.0/bin/pm2 delete nfl-proxy
+    /home/alex/.nvm/versions/node/v24.4.0/bin/pm2 delete "nfl-proxy"
 
 - name: "Start new PM2 container"
   args:
     chdir: "{{ data_dir }}/nfl-proxy"
   shell: |
-    /home/alex/.nvm/versions/node/v24.4.0/bin/pm2 start --name="nfl-proxy" "venv/bin/activate && python3 main.py"
+    /home/alex/.nvm/versions/node/v24.4.0/bin/pm2 start --name="nfl-proxy" "venv/bin/activate && venv/bin/python main.py"
