@@ -50,6 +50,6 @@
       traefik.http.routers.nflproxy.rule: "Host(`nfl.fntz.net`)"
       traefik.http.routers.nflproxy.entrypoints: webSecure
       traefik.http.routers.nflproxy.tls.certresolver: letsencrypt
-      traefik.http.services.nflproxy.loadbalancer.server.address: "http://172.16.0.25:5000"
+      traefik.http.services.nflproxy.loadbalancer.server.url: "http://172.16.0.25:5000"
     networks:
       - name: "{{ docker_network_name }}"
