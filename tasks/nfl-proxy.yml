@@ -20,4 +20,4 @@
   args:
     chdir: "{{ data_dir }}/nfl-proxy"
   shell: |
-    /home/alex/.nvm/versions/node/v24.4.0/bin/pm2 start --name="nfl-proxy" "python3 main.py"
+    /home/alex/.nvm/versions/node/v24.4.0/bin/pm2 start --name="nfl-proxy" "venv/bin/activate && python3 main.py"
