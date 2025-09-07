@@ -18,6 +18,7 @@
     name: api
     tag: "latest"
     build:
+      nocache: true
       path: "{{ data_dir }}/api/app"
       dockerfile: Dockerfile
     source: build
