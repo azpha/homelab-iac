@@ -22,6 +22,7 @@
       path: "{{ data_dir }}/api/app"
       dockerfile: Dockerfile
     source: build
+    force_source: true
     state: present
 
 - name: Create API Network
