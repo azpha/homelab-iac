@@ -21,7 +21,7 @@
 - name: Create Nextcloud DB Docker Container
   docker_container:
     name: nc_postgresql
-    image: postgres:16-alpine
+    image: postgres:17-alpine
     restart_policy: unless-stopped
     recreate: true
     networks:

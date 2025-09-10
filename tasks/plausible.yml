@@ -25,7 +25,7 @@
 - name: Deploy Plausible Database Docker Container
   docker_container:
     name: metrics_postgres
-    image: postgres:16-alpine
+    image: postgres:17-alpine
     restart_policy: unless-stopped
     recreate: true
     volumes:
