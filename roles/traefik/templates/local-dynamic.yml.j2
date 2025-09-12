@@ -1,0 +1,60 @@
+http:
+  routers:
+    plex:
+      rule: "Host(`tv.fntz.net`)"
+      service: plex
+      entryPoints:  
+        - webSecure
+      tls:
+        certResolver: letsencrypt
+    jtraefik:
+      rule: "Host(`traefik-jackson.fntz.net`)"
+      service: jtraefik
+      entryPoints:
+        - webSecure
+      tls:
+        certResolver: letsencrypt
+    traefik:
+      rule: "Host(`traefik.fntz.net`)"
+      service: traefik
+      entryPoints:
+        - webSecure
+      tls:
+        certResolver: letsencrypt
+    nflproxy:
+      rule: "Host(`nfl.fntz.net`)"
+      service: nflproxy
+      entryPoints:
+        - webSecure
+      tls:
+        certResolver: letsencrypt
+    nvr:
+      rule: "Host(`nvr.fntz.net`)"
+      service: nvr
+      entryPoints:
+        - webSecure
+      tls:
+        certResolver: letsencrypt
+    
+  
+  services:
+    plex:
+      loadBalancer:
+        servers:
+          - url: "http://172.16.0.29:32400"
+    jtraefik:
+      loadBalancer:
+        servers:
+          - url: "http://jackson:8080/"
+    traefik:
+      loadBalancer:
+        servers:
+          - url: "http://jade:8080/"
+    nflproxy:
+      loadBalancer:
+        servers:
+          - url: "http://jade:5000/"
+    nvr:
+      loadBalancer:
+        servers:
+          - url: "http://nas:5000/"

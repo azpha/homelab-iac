@@ -30,9 +30,3 @@
     volumes:
       - "{{ data_dir }}/plex:/config"
       - "{{ media_path }}:/media"
-    labels:
-      traefik.enable: "true"
-      traefik.http.routers.plex.rule: Host(`tv.fntz.net`)
-      traefik.http.routers.plex.entrypoints: webSecure
-      traefik.http.routers.plex.tls.certresolver: letsencrypt
-      traefik.http.services.plex.loadbalancer.server.url: "http://172.16.0.29:32400"

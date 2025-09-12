@@ -14,10 +14,23 @@
     tag: latest
     source: pull
 
+# create static configuration for traefik
 - name: Create Traefik Configuration
   template:
     src: config.yml.j2
     dest: "{{ data_dir }}/traefik/traefik.yml"
+
+# create dynamic provider files for each system
+- name: Create Traefik Dynamic File (Local)
+  template:
+    src: local-dynamic.yml.j2
+    dest: "{{ data_dir }}/traefik/dynamic.yml"
+  when: server == "jade" or server == "nas"
+- name: Create Traefik Dynamic File (Remote)
+  template:
+    src: remote-dynamic.yml.j2
+    dest: "{{ data_dir }}/traefik/dynamic.yml"
+  when: server == "jackson"
 
 - name: Deploy Traefik Docker Container
   docker_container:
@@ -38,24 +51,6 @@
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - "{{ data_dir }}/traefik/data:/data"
       - "{{ data_dir }}/traefik/traefik.yml:/traefik.yml"
-    labels:
-      traefik.enable: "true"
-      traefik.http.routers.traefik.service: traefik
-      traefik.http.routers.traefik.rule: "Host(`traefik.fntz.net`)"
-      traefik.http.routers.traefik.entrypoints: webSecure
-      traefik.http.routers.traefik.tls.certresolver: letsencrypt
-      traefik.http.services.traefik.loadbalancer.server.port: "8080"
-
-      traefik.http.routers.jtraefik.service: jtraefik
-      traefik.http.routers.jtraefik.rule: "Host(`traefik-jackson.fntz.net`)"
-      traefik.http.routers.jtraefik.entrypoints: webSecure
-      traefik.http.routers.jtraefik.tls.certresolver: letsencrypt
-      traefik.http.services.jtraefik.loadbalancer.server.url: "http://jackson:8080"
-
-      traefik.http.routers.nflproxy.service: nflproxy
-      traefik.http.routers.nflproxy.rule: "Host(`nfl.fntz.net`)"
-      traefik.http.routers.nflproxy.entrypoints: webSecure
-      traefik.http.routers.nflproxy.tls.certresolver: letsencrypt
-      traefik.http.services.nflproxy.loadbalancer.server.url: "http://172.16.0.25:5000"
+      - "{{ data_dir }}/traefik/dynamic.yml:/dynamic.yml"
     networks:
       - name: "{{ docker_network_name }}"

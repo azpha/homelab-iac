@@ -3,6 +3,8 @@
   roles:
     - role: traefik
       tags: traefik_deploy
+      vars:
+        server: "jade"
 
   tasks:
     - name: Deploy Glance
@@ -95,6 +97,8 @@
   roles:
     - role: traefik
       tags: traefik_deploy
+      vars:
+        server: "jackson"
 
   tasks:
     - name: Deploy Gitea
@@ -114,10 +118,6 @@
       tags: owncloud_deploy
 
 - hosts: nas
-
-  roles:
-    - role: traefik
-      tags: traefik_deploy
 
   tasks:
     - name: Deploy Plex
