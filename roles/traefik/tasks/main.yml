@@ -41,10 +41,16 @@
     labels:
       traefik.enable: "true"
       traefik.http.routers.traefik.service: traefik
-      traefik.http.routers.traefik.rule: "Host(`{{ TRAEFIK_DASH_URL }}`)"
+      traefik.http.routers.traefik.rule: "Host(`traefik.fntz.net`)"
       traefik.http.routers.traefik.entrypoints: webSecure
       traefik.http.routers.traefik.tls.certresolver: letsencrypt
       traefik.http.services.traefik.loadbalancer.server.port: "8080"
+
+      traefik.http.routers.jtraefik.service: jtraefik
+      traefik.http.routers.jtraefik.rule: "Host(`traefik-jackson.fntz.net`)"
+      traefik.http.routers.jtraefik.entrypoints: webSecure
+      traefik.http.routers.jtraefik.tls.certresolver: letsencrypt
+      traefik.http.services.jtraefik.loadbalancer.server.url: "http://jackson:8080"
 
       traefik.http.routers.nflproxy.service: nflproxy
       traefik.http.routers.nflproxy.rule: "Host(`nfl.fntz.net`)"

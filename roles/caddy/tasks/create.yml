@@ -1,8 +1,0 @@
----
-- name: Create Caddyfile
-  template:
-    src: roles/caddy/templates/Caddyfile.j2
-    dest: "{{ data_dir }}/caddy/Caddyfile"
-
-- name: Reload Caddyfile
-  command: docker exec -w /etc/caddy caddy caddy reload

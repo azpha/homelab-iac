@@ -47,9 +47,9 @@
     - name: Deploy Romm
       import_tasks: tasks/romm.yml
       tags: romm_deploy
-    - name: Deploy Nextcloud
-      import_tasks: tasks/nextcloud.yml
-      tags: nextcloud_deploy
+    - name: Deploy Owncloud
+      import_tasks: tasks/owncloud.yml
+      tags: owncloud_deploy
     - name: Deploy Excalidraw
       import_tasks: tasks/excalidraw.yml
       tags: excalidraw_deploy
@@ -109,9 +109,9 @@
     - name: Deploy Plausible
       import_tasks: tasks/plausible.yml
       tags: plausible_deploy
-    - name: Deploy Nextcloud
-      import_tasks: tasks/nextcloud.yml
-      tags: nextcloud_deploy
+    - name: Deploy Owncloud
+      import_tasks: tasks/owncloud.yml
+      tags: owncloud_deploy
 
 - hosts: nas
 
