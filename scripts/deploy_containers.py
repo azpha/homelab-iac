@@ -27,6 +27,7 @@ def run_deployment(tag = None):
   print(f"Running deployment for {tag}..")
   res = subprocess.run(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
   lines = res.stdout.decode(encoding='utf-8').split("\n")
+  print(lines)
   
   success = True
   for ind, line in enumerate(lines):
