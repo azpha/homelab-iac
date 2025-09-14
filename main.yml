@@ -13,9 +13,6 @@
     - name: Deploy Servarr
       import_tasks: tasks/servarr.yml
       tags: servarr_deploy
-    - name: Deploy Dozzle
-      import_tasks: tasks/dozzle.yml
-      tags: dozzle_deploy
     - name: Deploy Cup
       import_tasks: tasks/cup.yml
       tags: cup_deploy
@@ -64,9 +61,6 @@
     - name: Deploy Navidrome
       import_tasks: tasks/navidrome.yml
       tags: navidrome_deploy
-    - name: Deploy Monitoring Stack
-      import_tasks: tasks/monitoring.yml
-      tags: monitoring_deploy
     - name: Deploy Drop
       import_tasks: tasks/drop.yml
       tags: drop_deploy
@@ -79,9 +73,6 @@
     - name: Deploy QBittorrent
       import_tasks: tasks/qbittorrent.yml
       tags: qbittorrent_deploy
-    - name: Deploy Kavita
-      import_tasks: tasks/kavita.yml
-      tags: kavita_deploy
     - name: Deploy Jackett
       import_tasks: tasks/jackett.yml
       tags: jackett_deploy
