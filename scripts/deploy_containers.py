@@ -63,14 +63,14 @@ def main():
     if "tasks" in file:
         print(os.path.dirname(os.path.abspath(__file__)))
         if not os.path.exists(os.path.join(tasks_path, file.split("/")[1])):
-          container_name = file.split("/")[1]
+          container_name = file.split("/")[1].replace(".yml", "").replace(".yaml", "")
           print(f"file does not exist! attempting to remove docker container \"{container_name}\"..")
 
-          res = subprocess.run(f"docker container stop {container_name}")
+          res = subprocess.run(f"/usr/bin/docker container stop {container_name}")
           if res.returncode == 0:
-            subprocess.run(f"docker container rm {container_name}")
-            subprocess.run(f"docker image prune -f")
-            subprocess.run(f"docker container prune -f")
+            subprocess.run(f"/usr/bin/docker container rm {container_name}")
+            subprocess.run(f"/usr/bin/docker image prune -f")
+            subprocess.run(f"/usr/bin/docker container prune -f")
 
             print(f"successfully removed container \"{container_name}\"")
           else:
