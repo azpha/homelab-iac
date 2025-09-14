@@ -1,5 +1,6 @@
 import re
 import sys
+import os
 import subprocess
 
 bracket_regex = r'\[([^\]]*)\]'
@@ -7,6 +8,7 @@ quote_regex = r'"([^"]*)"'
 
 def git_diff():
   args = sys.argv
+  print(args[1], args[2])
   res = subprocess.run(f"git diff --name-only {args[1]} {args[2]}", capture_output=True, shell=True, text=True)
   return res.stdout.strip().split("\n")
 
@@ -40,6 +42,7 @@ def run_deployment(tag = None):
   return success
 
 def main():
+  tasks_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../tasks")
   diff = git_diff()
   vpn_containers = [
     "tasks/qbittorrent.yml",
@@ -58,14 +61,29 @@ def main():
 
   for file in diff:
     if "tasks" in file:
-        task_name = file.split("/")[1].split(".")[0] + "_deploy"
-        state = run_deployment(tag=task_name)
+        print(os.path.dirname(os.path.abspath(__file__)))
+        if not os.path.exists(os.path.join(tasks_path, file.split("/")[1])):
+          container_name = file.split("/")[1]
+          print(f"file does not exist! attempting to remove docker container \"{container_name}\"..")
 
-        if not state:
-          success = False
-          break
+          res = subprocess.run(f"docker container stop {container_name}")
+          if res.returncode == 0:
+            subprocess.run(f"docker container rm {container_name}")
+            subprocess.run(f"docker image prune -f")
+            subprocess.run(f"docker container prune -f")
+
+            print(f"successfully removed container \"{container_name}\"")
+          else:
+            print(f"non-0 error code returned for stop command on container \"{container_name}\"")
         else:
-          deployed += 1
+          task_name = file.split("/")[1].split(".")[0] + "_deploy"
+          state = run_deployment(tag=task_name)
+
+          if not state:
+            success = False
+            break
+          else:
+            deployed += 1
 
   if success and deployed > 0:
     print("\n---------------------")
