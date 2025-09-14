@@ -66,11 +66,11 @@ def main():
           container_name = file.split("/")[1].replace(".yml", "").replace(".yaml", "")
           print(f"file does not exist! attempting to remove docker container \"{container_name}\"..")
 
-          res = subprocess.run(f"/usr/bin/docker container stop {container_name}")
+          res = subprocess.run(f"/usr/bin/docker container stop {container_name}", shell=True)
           if res.returncode == 0:
-            subprocess.run(f"/usr/bin/docker container rm {container_name}")
-            subprocess.run(f"/usr/bin/docker image prune -f")
-            subprocess.run(f"/usr/bin/docker container prune -f")
+            subprocess.run(f"/usr/bin/docker container rm {container_name}", shell=True)
+            subprocess.run(f"/usr/bin/docker image prune -f", shell=True)
+            subprocess.run(f"/usr/bin/docker container prune -f", shell=True)
 
             print(f"successfully removed container \"{container_name}\"")
           else:
