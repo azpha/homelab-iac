@@ -1,0 +1,27 @@
+---
+- name: Pull latest Dozzle Docker Image
+  docker_image:
+    name: amir20/dozzle
+    tag: latest
+    source: pull
+
+- name: Create Dozzle Docker Container
+  docker_container:
+    name: dozzle
+    image: amir20/dozzle:latest
+    restart_policy: unless-stopped
+    recreate: true
+    networks:
+      - name: homelab
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    env:
+      DOZZLE_ENABLE_ACTIONS: "{{ DOZZLE_ACTIONS }}"
+      DOZZLE_ENABLE_SHELL: "{{ DOZZLE_SHELL }}"
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.dz.rule: Host(`logs.fntz.net`)
+      traefik.http.routers.dz.entrypoints: webSecure
+      traefik.http.routers.dz.tls.certresolver: letsencrypt
+      traefik.http.services.dz.loadbalancer.server.port: "8080"
+      traefik.http.routers.dz.middlewares: tinyauth
