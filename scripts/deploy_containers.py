@@ -8,7 +8,6 @@ quote_regex = r'"([^"]*)"'
 
 def git_diff():
   args = sys.argv
-  print(args[1], args[2])
   res = subprocess.run(f"git diff --name-only {args[1]} {args[2]}", capture_output=True, shell=True, text=True)
   return res.stdout.strip().split("\n")
 
@@ -26,18 +25,25 @@ def run_deployment(tag = None):
 
   print(f"Running deployment for {tag}..")
   res = subprocess.run(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-  lines = res.stdout.decode(encoding='utf-8').split("\n")
-  print(res.stdout, res.stderr, command)
+  stdout_lines = res.stdout.decode(encoding='utf-8').split("\n")
+  stderr_lines = res.stderr.decode(encoding='utf-8').split("\n")
+
   
   success = True
-  for ind, line in enumerate(lines):
+  for ind, line in enumerate(stdout_lines):
     if "fatal:" in line:
       success = False
       host = re.findall(bracket_regex, line)[0]
-      task_failed = re.findall(bracket_regex, lines[ind - 1])[0]
+      task_failed = re.findall(bracket_regex, stdout_lines[ind - 1])[0]
       reason_failed = re.findall(quote_regex, line)
 
       print(f"\n{tag} failed deployment!\n{host}\n{reason_failed}\n{task_failed}\n")
+      break
+
+  for ind, line in enumerate(stderr_lines):
+    if "error:" in line.lower():
+      success = False
+      print(f"{tag} failed deployment! {line}")
       break
 
   return success
