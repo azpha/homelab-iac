@@ -49,6 +49,7 @@
     volumes:
       - "{{ data_dir }}/api/db:/var/lib/postgresql/data"
     env:
+      POSTGRES_USER: "api"
       POSTGRES_PASSWORD: "{{ API_POSTGRES_PASSWORD }}"
       PGDATA: "/var/lib/postgresql/data/pgdata"
 
