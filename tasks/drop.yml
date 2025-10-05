@@ -52,6 +52,7 @@
     env:
       DATABASE_URL: "postgres://drop:drop@drop_postgres:5432/drop"
       GIANT_BOMB_API_KEY: "{{ DROP_GIANT_BOMB_API_KEY }}"
+      EXTERNAL_URL: "https://games.fntz.net"
     labels:
       traefik.enable: "true"
       traefik.http.routers.drop.rule: Host(`games.fntz.net`)
