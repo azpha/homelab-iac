@@ -21,7 +21,7 @@
 - name: Create Drop DB Container
   docker_container:
     name: drop_postgres
-    image: postgres:17-alpine
+    image: postgres:14-alpine
     recreate: true
     networks:
       - name: drop
@@ -41,7 +41,7 @@
 - name: Create Drop Container
   docker_container:
     name: drop
-    image: ghcr.io/drop-oss/drop:v0.3.3
+    image: ghcr.io/drop-oss/drop:latest
     recreate: true
     networks:
       - name: homelab
