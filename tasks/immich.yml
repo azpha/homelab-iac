@@ -33,16 +33,16 @@
     networks:
       - name: immich
 
-- name: Create Immich ML Docker Container
-  docker_container:
-    name: immich_machine_learning
-    image: ghcr.io/immich-app/immich-machine-learning:release
-    restart_policy: unless-stopped
-    recreate: true
-    volumes:
-      - "{{ data_dir }}/immich/model-cache:/cache"
-    networks:
-      - name: immich
+# - name: Create Immich ML Docker Container
+#   docker_container:
+#     name: immich_machine_learning
+#     image: ghcr.io/immich-app/immich-machine-learning:release
+#     restart_policy: unless-stopped
+#     recreate: true
+#     volumes:
+#       - "{{ data_dir }}/immich/model-cache:/cache"
+#     networks:
+#       - name: immich
 
 - name: Create Immich Server Docker Container
   docker_container:
