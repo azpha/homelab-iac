@@ -1,0 +1,31 @@
+---
+- name: Create folder structure
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: 999
+  with_items:
+    - "{{ data_dir }}/uptime-kuma"
+
+- name: Pull latest Uptime Kuma Docker Image
+  docker_image:
+    name: louislam/uptime-kuma
+    tag: latest
+    source: pull
+
+- name: Create Uptime Kuma Docker Container
+  docker_container:
+    name: uptime-kuma
+    image: louislam/uptime-kuma
+    restart: always
+    recreate: true
+    networks:
+      - name: homelab
+    volumes:
+      - "{{ data_dir }}/uptime-kuma:/app/data"
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.status.rule: Host(`status.fntz.net`)
+      traefik.http.routers.status.entrypoints: webSecure
+      traefik.http.routers.status.certresolver: letsencrypt
+      traefik.http.services.status.loadbalancer.server.port: "3001"

@@ -82,6 +82,9 @@
     - name: Deploy NFL Proxy
       import_tasks: tasks/nfl-proxy.yml
       tags: nfl-proxy_deploy
+    - name: Deploy Uptime Kuma
+      import_tasks: tasks/uptime-kuma.yml
+      tags: uptime-kuma_deploy
 
 - hosts: jackson
 
