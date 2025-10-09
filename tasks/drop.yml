@@ -44,6 +44,7 @@
     name: drop
     image: ghcr.io/drop-oss/drop:latest
     recreate: true
+    restart_policy: unless-stopped
     networks:
       - name: homelab
       - name: drop
