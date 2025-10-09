@@ -1,0 +1,27 @@
+---
+- name: Create folder structure
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ data_dir }}/fivem"
+
+- name: Pull latest FiveM Docker Image
+  docker_image:
+    name: spritsail/fivem
+    tag: latest
+    source: pull
+
+- name: Create FiveM Docker Container
+  docker_container:
+    name: fivem-server
+    image: spritsail/fivem:latest
+    restart_policy: unless-stopped
+    recreate: true
+    volumes:
+      - "{{ data_dir }}/fivem:/config"
+    env:
+      LICENSE_KEY: "{{ FIVEM_LICENSE_KEY }}"
+    published_ports:
+      - "30120:30120"
+      - "30120:30120/udp"

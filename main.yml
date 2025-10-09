@@ -110,6 +110,9 @@
     - name: Deploy Owncloud
       import_tasks: tasks/owncloud.yml
       tags: owncloud_deploy
+    - name: Deploy FiveM
+      import_tasks: tasks/fivem.yml
+      tags: fivem_deploy
 
 - hosts: nas
 
