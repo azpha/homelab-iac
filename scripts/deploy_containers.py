@@ -28,6 +28,7 @@ def main():
     "tasks/jackett.yml"
   ]
 
+  # because these containers rely on gluetun for network, they need to be recreated when gluetun is recreated
   if "tasks/gluetun.yml" in diff:
     print("Gluetun detected in diff, queuing dependent containers for recreation")
     for container in vpn_containers:
@@ -37,26 +38,29 @@ def main():
   failed = []
   deployed = 0
   for file in diff:
-    if "tasks/" in file and "roles/" not in file:
-      task_name = file.split("/")[1].split(".")[0]
-      task_file_path = os.path.join(tasks_path, file.split("/")[1])
+    if "tasks/" in file: 
+      # separating these for now because roles will typically
+      # have a bunch of other things tied to them
+      if "roles/" not in file:
+        task_name = file.split("/")[1].split(".")[0]
+        task_file_path = os.path.join(tasks_path, file.split("/")[1])
 
-      if not os.path.exists(task_file_path):
-        print(f"{task_name} doesn't exist, running cleanup")
-        res = subprocess.run(f"/usr/bin/docker container stop {task_name}", shell=True)
-        if res.returncode == 0:
-          subprocess.run(f"/usr/bin/docker container rm {task_name}", shell=True)
-          subprocess.run("/usr/bin/docker image prune -f", shell=True)
-          subprocess.run("/usr/bin/docker container prune -f", shell=True)
+        if not os.path.exists(task_file_path):
+          print(f"{task_name} doesn't exist, running cleanup")
+          res = subprocess.run(f"/usr/bin/docker container stop {task_name}", shell=True)
+          if res.returncode == 0:
+            subprocess.run(f"/usr/bin/docker container rm {task_name}", shell=True)
+            subprocess.run("/usr/bin/docker image prune -f", shell=True)
+            subprocess.run("/usr/bin/docker container prune -f", shell=True)
 
-          print(f"Cleaned up container {task_name}")
+            print(f"Cleaned up container {task_name}")
+
+      # deploy the task, regardless of its status
+      task = deploy(task_name)
+      if not task:
+        failed.append(task_name)
       else:
-        task = deploy(task_name)
-
-        if not task:
-          failed.append(task_name)
-        else:
-          deployed += 1
+        deployed += 1
 
   if len(failed) <= 0 and deployed > 0:
     print("\n---------------------")
