@@ -32,8 +32,6 @@
       - /etc/localtime:/etc/localtime:ro
       - "{{ data_dir }}/frigate:/config"
       - "{{ FRIGATE_RECORDINGS_PATH }}:/media/frigate"
-    networks:
-      - name: "{{ docker_network_name }}"
     labels:
       traefik.enable: "true"
       traefik.http.routers.frigate.rule: Host(`nvr.fntz.net`)
