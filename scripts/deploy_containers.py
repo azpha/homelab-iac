@@ -1,52 +1,24 @@
-import re
 import sys
 import os
 import subprocess
 
-bracket_regex = r'\[([^\]]*)\]'
-quote_regex = r'"([^"]*)"'
-
 def git_diff():
   args = sys.argv
   res = subprocess.run(f"git diff --name-only {args[1]} {args[2]}", capture_output=True, shell=True, text=True)
-  return res.stdout.strip().split("\n")
+  return [x for x in res.stdout.strip().split("\n") if "tasks/" in x and "roles/" not in x]
 
-def construct_ansible_command(tag = None):
-  command = "ANSIBLE_CONFIG=ansible.cfg /usr/bin/ansible-playbook main.yml --vault-password-file ~/.vault_pass.txt"
-
-  if tag:
-    command += f" --tags {tag}"
-
+def construct_command(tag = None):
+  command = f"ANSIBLE_CONFIG=ansible.cfg /usr/bin/ansible-playbook main.yml --vault-password-file ~/.vault_pass.txt --tags {tag}_deploy"
   return command
 
-def run_deployment(tag = None):
+def deploy(tag = None):
   if tag:
-    command = construct_ansible_command(tag=tag)
-
-  print(f"Running deployment for {tag}..")
-  res = subprocess.run(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-  stdout_lines = res.stdout.decode(encoding='utf-8').split("\n")
-  stderr_lines = res.stderr.decode(encoding='utf-8').split("\n")
-
+    command = construct_command(tag)
   
-  success = True
-  for ind, line in enumerate(stdout_lines):
-    if "fatal:" in line:
-      success = False
-      host = re.findall(bracket_regex, line)[0]
-      task_failed = re.findall(bracket_regex, stdout_lines[ind - 1])[0]
-      reason_failed = re.findall(quote_regex, line)
+  print(f"Deploying {tag}...\n")
+  res = subprocess.run(command, shell=True)
 
-      print(f"\n{tag} failed deployment!\n{host}\n{reason_failed}\n{task_failed}\n")
-      break
-
-  for ind, line in enumerate(stderr_lines):
-    if "error:" in line.lower():
-      success = False
-      print(f"{tag} failed deployment! {line}")
-      break
-
-  return success
+  return res.returncode == 0
 
 def main():
   tasks_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../tasks")
@@ -56,49 +28,49 @@ def main():
     "tasks/jackett.yml"
   ]
 
-  success = True
-  deployed = 0
-
-  # auto-heal any vpn-dependent containers
   if "tasks/gluetun.yml" in diff:
+    print("Gluetun detected in diff, queuing dependent containers for recreation")
     for container in vpn_containers:
       if container not in diff:
-        print(f"Adding {container} to restart list as Gluetun is present..")
         diff.append(container)
 
+  failed = []
+  deployed = 0
   for file in diff:
-    if "tasks" in file:
-        print(os.path.dirname(os.path.abspath(__file__)))
-        if not os.path.exists(os.path.join(tasks_path, file.split("/")[1])):
-          container_name = file.split("/")[1].replace(".yml", "").replace(".yaml", "")
-          print(f"file does not exist! attempting to remove docker container \"{container_name}\"..")
+    if "tasks/" in file and "roles/" not in file:
+      task_name = file.split("/")[1].split(".")[0]
+      task_file_path = os.path.join(tasks_path, file.split("/")[1])
 
-          res = subprocess.run(f"/usr/bin/docker container stop {container_name}", shell=True)
-          if res.returncode == 0:
-            subprocess.run(f"/usr/bin/docker container rm {container_name}", shell=True)
-            subprocess.run(f"/usr/bin/docker image prune -f", shell=True)
-            subprocess.run(f"/usr/bin/docker container prune -f", shell=True)
+      if not os.path.exists(task_file_path):
+        print(f"{task_name} doesn't exist, running cleanup")
+        res = subprocess.run(f"/usr/bin/docker container stop {task_name}", shell=True)
+        if res.returncode == 0:
+          subprocess.run(f"/usr/bin/docker container rm {task_name}", shell=True)
+          subprocess.run("/usr/bin/docker image prune -f", shell=True)
+          subprocess.run("/usr/bin/docker container prune -f", shell=True)
 
-            print(f"successfully removed container \"{container_name}\"")
-          else:
-            print(f"non-0 error code returned for stop command on container \"{container_name}\"")
+          print(f"Cleaned up container {task_name}")
+      else:
+        task = deploy(task_name)
+
+        if not task:
+          failed.append(task_name)
         else:
-          task_name = file.split("/")[1].split(".")[0] + "_deploy"
-          state = run_deployment(tag=task_name)
+          deployed += 1
 
-          if not state:
-            success = False
-            break
-          else:
-            deployed += 1
-
-  if success and deployed > 0:
+  if len(failed) <= 0 and deployed > 0:
     print("\n---------------------")
     print(" Deployment succeeded!")
-    print(f" Tasks: {", ".join(diff)}")
+    print(f" All tasks: {", ".join(diff)}")
     print("---------------------\n")
-  elif deployed == 0:
-    print("Successful, no containers required deployment")
+  elif len(failed) > 0:
+    print("\n---------------------")
+    print(" Deployment failed!")
+    print(f" Failed tasks: {", ".join(failed)}")
+    print(f" All tasks: {", ".join(diff)}")
+    print("---------------------\n")
+  elif deployed <= 0:
+    print("Successfully executed, no tasks required execution")
 
 if __name__ == "__main__":
   main()
