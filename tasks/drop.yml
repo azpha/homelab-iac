@@ -23,6 +23,7 @@
     name: drop_postgres
     image: postgres:14-alpine
     recreate: true
+    restart_policy: unless-stopped
     networks:
       - name: drop
     healthcheck:
