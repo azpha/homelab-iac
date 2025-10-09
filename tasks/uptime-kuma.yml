@@ -16,7 +16,7 @@
   docker_container:
     name: uptime-kuma
     image: louislam/uptime-kuma
-    restart: always
+    restart: unless-stopped
     recreate: true
     networks:
       - name: homelab
