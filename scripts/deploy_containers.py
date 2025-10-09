@@ -67,14 +67,17 @@ def main():
     print(" Deployment succeeded!")
     print(f" All tasks: {", ".join(diff)}")
     print("---------------------\n")
+    sys.exit(0)
   elif len(failed) > 0:
     print("\n---------------------")
     print(" Deployment failed!")
     print(f" Failed tasks: {", ".join(failed)}")
     print(f" All tasks: {", ".join(diff)}")
     print("---------------------\n")
+    sys.exit(1)
   elif deployed <= 0:
     print("Successfully executed, no tasks required execution")
+    sys.exit(0)
 
 if __name__ == "__main__":
   main()
