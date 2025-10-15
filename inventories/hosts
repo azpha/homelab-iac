@@ -1,8 +1,0 @@
-[jade]
-jade ansible_host=fntz.net ansible_user=alex
-
-[jackson]
-jackson ansible_host=direct.jackson.alexav.gg ansible_user=root
-
-[nas]
-nas ansible_host=172.16.0.29 ansible_user=alex

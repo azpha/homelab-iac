@@ -85,6 +85,9 @@
     - name: Deploy Uptime Kuma
       import_tasks: tasks/uptime-kuma.yml
       tags: uptime-kuma_deploy
+    - name: Deploy CouchDB for obsidian
+      import_tasks: tasks/obsidian.yml
+      tags: obsidian_deploy
 
 - hosts: jackson
 

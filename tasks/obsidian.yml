@@ -1,0 +1,29 @@
+---
+- name: Create folder structure
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ data_dir }}/obsidian"
+    - "{{ data_dir }}/obsidian/data"
+    - "{{ data_dir }}/obsidian/etc"
+
+- name: Pull Docker Image
+  docker_image:
+    name: couchdb
+    tag: latest
+
+- name: Create Docker Container
+  docker_container:
+    name: couchdb
+    image: couchdb:latest
+    recreate: true
+    restart_policy: unless-stopped
+    volumes:
+      - "{{ data_dir }}/obsidian/data:/opt/couchdb/data"
+      - "{{ data_dir }}/obsidian/etc:/opt/couchdb/etc/local.d"
+    env:
+      COUCHDB_USER: "{{ COUCHDB_USER }}"
+      COUCHDB_PASSWORD: "{{ COUCHDB_PASSWORD }}"
+    published_ports:
+      - "5984:5984"
