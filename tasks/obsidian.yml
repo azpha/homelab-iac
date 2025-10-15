@@ -20,6 +20,8 @@
     image: couchdb:latest
     recreate: true
     restart_policy: unless-stopped
+    networks:
+      - name: homelab
     volumes:
       - "{{ data_dir }}/obsidian/data:/opt/couchdb/data"
       - "{{ data_dir }}/obsidian/etc:/opt/couchdb/etc/local.d"
