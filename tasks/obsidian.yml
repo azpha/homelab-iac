@@ -12,6 +12,7 @@
   docker_image:
     name: couchdb
     tag: latest
+    source: pull
 
 - name: Create Docker Container
   docker_container:
