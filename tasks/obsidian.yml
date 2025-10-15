@@ -26,5 +26,9 @@
     env:
       COUCHDB_USER: "{{ COUCHDB_USER }}"
       COUCHDB_PASSWORD: "{{ COUCHDB_PASSWORD }}"
-    published_ports:
-      - "5984:5984"
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.couch.rule: Host(`couch.fntz.net`)
+      traefik.http.routers.couch.entrypoints: webSecure
+      traefik.http.routers.couch.tls.certresolver: letsencrypt
+      traefik.http.services.couch.loadbalancer.server.port: "5984"
