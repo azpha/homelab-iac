@@ -1,23 +1,4 @@
-[jade]
-
-fntz.net 
-
-[jade:vars]
-
-ansible_user=alex
-
-[jackson]
-
-direct.jackson.alexav.gg 
-
-[jackson:vars]
-
-ansible_user=root
-
-[nas]
-
-172.16.0.29 
-
-[nas:vars]
-
-ansible_user=alex
+[ungrouped]
+jade ansible_host=fntz.net ansible_user=alex
+jackson ansible_host=direct.jackson.alexav.gg ansible_user=root
+nas ansible_host=172.16.0.29 ansible_user=alex
