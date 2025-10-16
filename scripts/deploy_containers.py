@@ -73,10 +73,13 @@ def main():
     if "host_vars" not in file:
       # deploy the task, regardless of its status
       if "roles/" not in file:
-        task = deploy(tag=task_name)
+        if task_name not in deployed:
+          task = deploy(tag=task_name)
       else:
         task_name = file.split("/")[1]
-        task = deploy(tag=task_name)
+        
+        if task_name not in deployed:
+          task = deploy(tag=task_name)
 
       if not task:
         failed.append(task_name)
