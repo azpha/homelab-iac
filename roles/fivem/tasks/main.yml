@@ -49,12 +49,17 @@
     dest: "{{ data_dir }}/fivem/server-data/server.cfg"
   when: not fivem_server_data.stat.exists
 
+- name: Stop & remove FiveM systemd service
+  become: yes
+  shell: |
+    systemctl stop fivem.service &&
+    rm /etc/systemd/system/fivem.service
+
 - name: Create FiveM systemd service
   become: yes
   template:
     src: fivem.service.j2
     dest: "/etc/systemd/system/fivem.service"
-  when: not fivem_systemd.stat.exists
 
 - name: Enable FiveM systemd service
   become: yes
