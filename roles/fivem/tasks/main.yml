@@ -34,6 +34,7 @@
   unarchive:
     src: "{{ data_dir }}/fivem/server.tar.xz"
     dest: "{{ data_dir }}/fivem/server"
+    remote_src: yes
   when: not fivem_server.stat.exists
 
 - name: Clone FiveM Server Data
