@@ -3,8 +3,8 @@ Description=FiveM Server
 Documentation=https://git.alexav.gg/alex/homelab
 
 [Service]
-Type=simple
-ExecStart={{data_dir}}/fivem/server/run.sh +exec server.cfg
+Type=forking
+ExecStart=/usr/bin/tmux new-session -s fivem -d '/bin/sh {{data_dir}}/fivem/server/run.sh +exec server.cfg'
 WorkingDirectory={{ data_dir }}/fivem/server-data
 TimeoutSec=30
 RestartSec=30
