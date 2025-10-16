@@ -3,11 +3,12 @@ Description=FiveM Server
 Documentation=https://git.alexav.gg/alex/homelab
 
 [Service]
+Type=simple
 ExecStart={{data_dir}}/fivem/server/run.sh +exec server.cfg
 ExecReload=/bin/kill -s HUP $MAINPID
 WorkingDirectory={{ data_dir }}/fivem/server-data
-TimeoutSec=0
-RestartSec=10
+TimeoutSec=30
+RestartSec=30
 Restart=always
 User=root
 
