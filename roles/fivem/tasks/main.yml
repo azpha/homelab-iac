@@ -1,0 +1,64 @@
+---
+- name: Create folder structure
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ data_dir }}/fivem"
+    - "{{ data_dir }}/fivem/server"
+    - "{{ data_dir }}/fivem/server-data"
+
+- name: Check if FiveM has already been downloaded
+  stat:
+    path: "{{ data_dir }}/fivem/server/run.sh"
+  register: fivem_server
+
+- name: Check if FiveM Config directory already exists
+  stat:
+    path: "{{ data_dir }}/fivem/server-data/server.cfg"
+  register: fivem_server_data
+
+- name: Check if FiveM systemd service exists
+  stat:
+    path: "/etc/systemd/system/fivem.service"
+  register: fivem_systemd
+
+- name: Download FiveM Linux Build
+  get_url:
+    url: https://runtime.fivem.net/artifacts/fivem/build_proot_linux/master/20944-eaa15781d4695bd97b050d848e34aac3607c6696/fx.tar.xz
+    dest: "{{ data_dir }}/fivem/server.tar.xz"
+    mode: 0755
+  when: not fivem_server.stat.exists
+
+- name: Unpack FiveM Linux Build
+  unarchive:
+    src: "{{ data_dir }}/fivem/server.tar.xz"
+    dest: "{{ data_dir }}/fivem/server"
+  when: not fivem_server.stat.exists
+
+- name: Clone FiveM Server Data
+  git:
+    repo: https://github.com/citizenfx/cfx-server-data.git
+    dest: "{{ data_dir }}/fivem/server-data"
+  when: not fivem_server_data.stat.exists
+
+- name: Create FiveM server configuration
+  template:
+    src: server.cfg.j2
+    dest: "{{ data_dir }}/fivem/server-data/server.cfg"
+  when: not fivem_server_data.stat.exists
+
+- name: Create FiveM systemd service
+  become: yes
+  template:
+    src: fivem.service.j2
+    dest: "/etc/systemd/system/fivem.service"
+  when: not fivem_systemd.stat.exists
+
+- name: Enable FiveM systemd service
+  become: yes
+  command: systemctl enable fivem.service
+
+- name: Start FiveM systemd service
+  become: yes
+  command: systemctl start fivem.service
