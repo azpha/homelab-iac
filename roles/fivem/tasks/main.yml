@@ -54,6 +54,7 @@
   shell: |
     systemctl stop fivem.service &&
     rm /etc/systemd/system/fivem.service
+  when: fivem_systemd.stat.exists
 
 - name: Create FiveM systemd service
   become: yes
