@@ -1,6 +1,7 @@
 # Homelab IaC
 
 This repository hosts my homelab infrastructure setup, built using Ansible & Gitea Workflows.
+I primarily host this on my [Gitea](https://git.alexav.gg/alex/homelab) server, but it is mirrored to my GitHub account.
 
 ## Getting started
 
