@@ -1,0 +1,33 @@
+name: Create New Secrets Template
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "host_vars/**"
+  workflow_dispatch:
+
+jobs:
+  create-pr:
+    name: Extract updated template
+    runs-on: runner
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run extraction script
+        run: |
+          echo "${{ secrets.VAULT_PASS }}" > ~/.vault_pass.txt
+          rm host_vars/all.template.yml
+          python3 scripts/extract_to_template.py
+
+      - name: Create PR
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.TOKEN }}
+          commit-message: "Extract new template"
+          branch: "template-extraction"
+          title: "Automated Template Extraction"
+          body: "PR to update the template as new secrets were added"
+          base: main
