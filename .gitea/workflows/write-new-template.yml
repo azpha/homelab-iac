@@ -28,7 +28,7 @@ jobs:
           git checkout -b template-extraction-${{ github.run_number }}
           git add .
           git commit -m "Automated template extraction"
-          git push origin template-extraction
+          git push origin template-extraction-${{ github.run_number }}
 
       - name: Create Pull Request
         run: |
@@ -39,6 +39,6 @@ jobs:
             -d '{
               "title": "Automated Template Extraction",
               "body": "Updates the `all.template.yml` file with latest secrets for services",
-              "head": "template-extraction",
+              "head": "template-extraction-${{ github.run_number }}",
               "base": "main"
             }'
