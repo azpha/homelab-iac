@@ -19,7 +19,6 @@ jobs:
       - name: Run extraction script
         run: |
           echo "${{ secrets.VAULT_PASS }}" > ~/.vault_pass.txt
-          rm host_vars/all.template.yml
           python3 scripts/extract_to_template.py
 
       - name: Create PR
