@@ -90,6 +90,7 @@
       tags: obsidian_deploy
     - name: Deploy Helium services
       import_tasks: tasks/helium.yml
+      tags: helium_deploy
 
 - hosts: jackson
 

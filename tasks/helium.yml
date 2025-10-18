@@ -8,7 +8,7 @@
 
 - name: Clone latest services
   git:
-    repo: https://github.com/imputnet/helium-services
+    repo: git@git.alexav.gg:alex/helium-services.git
     dest: "{{ data_dir }}/helium"
 
 - name: Build NGINX image
@@ -18,8 +18,8 @@
     build:
       args:
         SERVICES_HOSTNAME: "{{ HELIUM_BASE_URL }}"
-      path: "{{ data_dir }}/helium/svc/nginx"
-      dockerfile: Dockerfile
+      path: "{{ data_dir }}/helium/svc"
+      dockerfile: "{{ data_dir }}/helium/svc/nginx/Dockerfile"
     source: build
     force_source: yes
     state: present
@@ -52,14 +52,18 @@
 
 - name: Create NGINX Container
   docker_container:
-    container_name: helium_nginx
+    name: helium_nginx
     image: helium_nginx:latest
     recreate: true
     restart_policy: unless-stopped
-    shm_size: 512mb
+    shm_size: "512M"
     networks:
       - name: helium
       - name: homelab
+    mounts:
+      - type: tmpfs
+        target: /tmp
+        tmpfs_size: 5G
     labels:
       traefik.enable: "true"
       traefik.http.routers.helium.rule: Host(`helium.fntz.net`)
@@ -69,18 +73,18 @@
 
 - name: Create UBO Proxy Container
   docker_container:
-    container_name: helium_ubo
+    name: helium_ubo
     image: helium_ubo:latest
     restart_policy: unless-stopped
     recreate: true
     networks:
       - name: helium
     env:
-      UBO_PROXY_BASE_URL: "{{ HELIUM_BASE_URL }}/ubo"
+      UBO_PROXY_BASE_URL: "https://{{ HELIUM_BASE_URL }}/ubo"
 
 - name: Create Extension Proxy Container
   docker_container:
-    container_name: helium_ext_proxy
+    name: helium_ext_proxy
     image: helium_ext_proxy:latest
     restart_policy: unless-stopped
     recreate: true
@@ -88,4 +92,4 @@
       - name: helium
     env:
       HMAC_SECRET: "{{ HELIUM_EXT_HMAC_SECRET }}"
-      PROXY_BASE_URL: "{{ HELIUM_BASE_URL }}/ext"
+      PROXY_BASE_URL: "https://{{ HELIUM_BASE_URL }}/ext"
