@@ -34,8 +34,8 @@ jobs:
         run: |
           curl -X POST \
             "https://git.alexav.gg/api/v1/repos/alex/homelab/pulls" \
-            -H "Authorization: token ${{ secrets.TOKEN }}"
-            -H "Content-Type: application/json"
+            -H "Authorization: token ${{ secrets.TOKEN }}" \
+            -H "Content-Type: application/json" \
             -d '{
               "title": "Automated Template Extraction",
               "body": "Updates the `all.template.yml` file with latest secrets for services",
