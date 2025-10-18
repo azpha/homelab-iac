@@ -21,12 +21,24 @@ jobs:
           echo "${{ secrets.VAULT_PASS }}" > ~/.vault_pass.txt
           python3 scripts/extract_to_template.py
 
-      - name: Create PR
-        uses: peter-evans/create-pull-request@v6
-        with:
-          token: ${{ secrets.TOKEN }}
-          commit-message: "Extract new template"
-          branch: "template-extraction"
-          title: "Automated Template Extraction"
-          body: "PR to update the template as new secrets were added"
-          base: main
+      - name: Commit changes
+        run: |
+          git config user.name "Service Account"
+          git config user.email "alex+homelab@alexav.gg"
+          git checkout -b template-extraction
+          git add .
+          git commit -m "Automated template extraction"
+          git push origin template-extraction
+
+      - name: Create Pull Request
+        run: |
+          curl -X POST \
+            "https://git.alexav.gg/api/v1/repos/alex/homelab/pulls" \
+            -H "Authorization: token ${{ secrets.TOKEN }}"
+            -H "Content-Type: application/json"
+            -d '{
+              "title": "Automated Template Extraction",
+              "body": "Updates the `all.template.yml` file with latest secrets for services",
+              "head": "template-extraction",
+              "base": "main"
+            }'
