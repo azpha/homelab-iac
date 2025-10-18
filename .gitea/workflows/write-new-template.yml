@@ -5,7 +5,9 @@ on:
     branches:
       - main
     paths:
-      - "host_vars/**"
+      - "host_vars/jackson.yml"
+      - "host_vars/jade.yml"
+      - "host_vars/nas.yml"
   workflow_dispatch:
 
 jobs:
