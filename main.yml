@@ -88,6 +88,8 @@
     - name: Deploy CouchDB for obsidian
       import_tasks: tasks/obsidian.yml
       tags: obsidian_deploy
+    - name: Deploy Helium services
+      import_tasks: tasks/helium.yml
 
 - hosts: jackson
 

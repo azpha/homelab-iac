@@ -1,0 +1,91 @@
+---
+- name: Create folder structure
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ data_dir }}/helium"
+
+- name: Clone latest services
+  git:
+    repo: https://github.com/imputnet/helium-services
+    dest: "{{ data_dir }}/helium"
+
+- name: Build NGINX image
+  docker_image:
+    name: helium_nginx
+    tag: "latest"
+    build:
+      args:
+        SERVICES_HOSTNAME: "{{ HELIUM_BASE_URL }}"
+      path: "{{ data_dir }}/helium/svc/nginx"
+      dockerfile: Dockerfile
+    source: build
+    force_source: yes
+    state: present
+
+- name: Build Extension Proxy image
+  docker_image:
+    name: helium_ext_proxy
+    tag: "latest"
+    build:
+      path: "{{ data_dir }}/helium/svc/extension-proxy"
+      dockerfile: Dockerfile
+    source: build
+    force_source: yes
+    state: present
+
+- name: Build UBO image
+  docker_image:
+    name: helium_ubo
+    tag: "latest"
+    build:
+      path: "{{ data_dir }}/helium/svc/ubo"
+      dockerfile: Dockerfile
+    source: build
+    force_source: yes
+    state: present
+
+- name: Create Helium Network
+  docker_network:
+    name: helium
+
+- name: Create NGINX Container
+  docker_container:
+    container_name: helium_nginx
+    image: helium_nginx:latest
+    recreate: true
+    restart_policy: unless-stopped
+    shm_size: 512mb
+    networks:
+      - name: helium
+      - name: homelab
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.helium.rule: Host(`helium.fntz.net`)
+      traefik.http.routers.helium.entrypoints: webSecure
+      traefik.http.routers.helium.tls.certresolver: letsencrypt
+      traefik.http.services.helium.loadbalancer.server.port: "80"
+
+- name: Create UBO Proxy Container
+  docker_container:
+    container_name: helium_ubo
+    image: helium_ubo:latest
+    restart_policy: unless-stopped
+    recreate: true
+    networks:
+      - name: helium
+    env:
+      UBO_PROXY_BASE_URL: "{{ HELIUM_BASE_URL }}/ubo"
+
+- name: Create Extension Proxy Container
+  docker_container:
+    container_name: helium_ext_proxy
+    image: helium_ext_proxy:latest
+    restart_policy: unless-stopped
+    recreate: true
+    networks:
+      - name: helium
+    env:
+      HMAC_SECRET: "{{ HELIUM_EXT_HMAC_SECRET }}"
+      PROXY_BASE_URL: "{{ HELIUM_BASE_URL }}/ext"
