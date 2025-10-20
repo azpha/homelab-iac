@@ -42,7 +42,7 @@
 - name: Create Immich Server Docker Container
   docker_container:
     name: immich_server
-    image: ghcr.io/immich-app/immich-server:release
+    image: ghcr.io/immich-app/immich-server:v2.1.0
     restart_policy: unless-stopped
     recreate: true
     networks:
