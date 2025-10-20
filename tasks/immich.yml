@@ -8,6 +8,12 @@
     - "{{ data_dir }}/immich/model-cache"
     - "{{ data_dir }}/immich/db"
 
+- name: Pull latest Immich Server Docker Image
+  docker_image:
+    name: ghcr.io/immich-app/immich-server
+    tag: release
+    source: pull
+
 - name: Create Immich Redis Docker Container
   docker_container:
     name: immich_redis
@@ -32,17 +38,6 @@
       POSTGRES_INITDB_ARGS: "--data-checksums"
     networks:
       - name: immich
-
-# - name: Create Immich ML Docker Container
-#   docker_container:
-#     name: immich_machine_learning
-#     image: ghcr.io/immich-app/immich-machine-learning:release
-#     restart_policy: unless-stopped
-#     recreate: true
-#     volumes:
-#       - "{{ data_dir }}/immich/model-cache:/cache"
-#     networks:
-#       - name: immich
 
 - name: Create Immich Server Docker Container
   docker_container:
