@@ -11,7 +11,7 @@
 - name: Pull latest Immich Server Docker Image
   docker_image:
     name: ghcr.io/immich-app/immich-server
-    tag: release
+    tag: 2.1.0
     source: pull
 
 - name: Create Immich Redis Docker Container
