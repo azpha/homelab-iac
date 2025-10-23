@@ -44,12 +44,12 @@ def main():
       if container not in diff:
         diff.append(container)
 
-  # when variables update for a host, recreate containers
-  for file in diff:
-    if "host_vars" in file:
-      hostname = file.split("/")[1].split(".")[0]
-      print(f"Secret file for '{hostname}' changed, will recreate containers on host after deployment")
-      host_vars_changed_for.append(hostname)
+  # when variables update for a host & there are no other modified containers, recreate containers on host
+  # for file in diff:
+  #   if "host_vars" in file:
+  #     hostname = file.split("/")[1].split(".")[0]
+  #     print(f"Secret file for '{hostname}' changed, will recreate containers on host after deployment")
+  #     host_vars_changed_for.append(hostname)
 
   deployed = []
   failed = []
