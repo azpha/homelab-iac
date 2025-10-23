@@ -96,5 +96,5 @@
       traefik.enable: "true"
       traefik.http.routers.mst.rule: Host(`mst.fntz.net`)
       traefik.http.routers.mst.entrypoints: webSecure
-      traefik.http.routers.mst.certresolver: letsencrypt
-      traefik.http.services.mst.loadbalancer.server.port: "80"
+      traefik.http.routers.mst.tls.certresolver: letsencrypt
+      traefik.http.services.mst.loadbalancer.server.port: "443"
