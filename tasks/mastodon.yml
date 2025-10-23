@@ -89,9 +89,12 @@
       VAPID_PUBLIC_KEY: "{{ MASTODON_VAPID_PUBLIC_KEY }}"
       OTP_SECRET: "{{ MASTODON_OTP_SECRET }}"
       S3_ENABLED: "false"
+      ACTIVE_RECORD_ENCRYPTION_DETERMINISTIC_KEY: "{{ MASTODON_ARE_DETERMINISTIC }}"
+      ACTIVE_RECORD_ENCRYPTION_KEY_DERIVATION_SALT: "{{ MASTODON_ARE_KEY_DERIVATION }}"
+      ACTIVE_RECORD_ENCRYPTION_PRIMARY_KEY: "{{ MASTODON_ARE_PRIMARY }}"
     labels:
       traefik.enable: "true"
       traefik.http.routers.mst.rule: Host(`mst.fntz.net`)
       traefik.http.routers.mst.entrypoints: webSecure
       traefik.http.routers.mst.certresolver: letsencrypt
-      traefik.http.services.mst.loadbalancer.server.port: 80
+      traefik.http.services.mst.loadbalancer.server.port: "80"
