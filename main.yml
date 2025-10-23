@@ -116,6 +116,9 @@
     - name: Deploy Owncloud
       import_tasks: tasks/owncloud.yml
       tags: owncloud_deploy
+    - name: Deploy Mastodon
+      import_tasks: tasks/mastodon.yml
+      tags: mastodon_deploy
 
 - hosts: nas
 
