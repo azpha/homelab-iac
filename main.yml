@@ -91,9 +91,6 @@
     - name: Deploy Helium services
       import_tasks: tasks/helium.yml
       tags: helium_deploy
-    - name: Deploy Ersatz
-      import_tasks: tasks/ersatztv.yml
-      tags: ersatztv_deploy
 
 - hosts: jackson
 
@@ -132,3 +129,6 @@
     - name: Deploy Frigate
       import_tasks: tasks/frigate.yml
       tags: frigate_deploy
+    - name: Deploy Ersatz
+      import_tasks: tasks/ersatztv.yml
+      tags: ersatztv_deploy
