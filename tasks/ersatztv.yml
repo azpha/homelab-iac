@@ -1,0 +1,29 @@
+---
+- name: Create folder structure
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ data_dir }}/ersatz"
+
+- name: Pull latest Docker Image
+  docker_image:
+    name: ghcr.io/ersatztv/ersatztv
+    tag: latest
+    source: pull
+
+- name: Create Docker Container
+  docker_container:
+    name: ersatztv
+    image: ghcr.io/ersatztv/ersatztv:latest
+    recreate: true
+    restart_policy: unless-stopped
+    mounts:
+      - type: tmpfs
+        target: /transcode
+        tmpfs_size: 5G
+    volumes:
+      - "{{ data_dir }}/ersatz:/config"
+      - "{{ media_path }}:{{ media_path }}:ro"
+    published_ports:
+      - "8409:8409"
