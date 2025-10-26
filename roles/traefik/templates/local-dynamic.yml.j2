@@ -35,6 +35,13 @@ http:
         - webSecure
       tls:
         certResolver: letsencrypt
+    iptv:
+      rule: "Host(`iptv.fntz.net`)"
+      service: iptv
+      entryPoints:
+        - webSecure
+      tls:
+        certResolver: letsencrypt
     
   
   services:
@@ -58,3 +65,7 @@ http:
       loadBalancer:
         servers:
           - url: "http://nas:5000/"
+    iptv:
+      loadBalancer:
+        servers:
+          - url: "http://nas:8409/"
