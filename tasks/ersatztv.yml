@@ -18,6 +18,8 @@
     image: ghcr.io/ersatztv/ersatztv:latest
     recreate: true
     restart_policy: unless-stopped
+    devices:
+      - /dev/dri/renderD128:/dev/dri/renderD128
     mounts:
       - type: tmpfs
         target: /transcode
