@@ -2,13 +2,13 @@
 - name: Pull latest Tinyauth Docker Image
   docker_image:
     name: ghcr.io/steveiliop56/tinyauth
-    tag: v3
+    tag: v4
     source: pull
 
 - name: Create Tinyauth Docker Container
   docker_container:
     name: tinyauth
-    image: ghcr.io/steveiliop56/tinyauth:v3
+    image: ghcr.io/steveiliop56/tinyauth:v4
     restart_policy: unless-stopped
     recreate: true
     networks:
@@ -17,16 +17,19 @@
       USERS: "{{ TINYAUTH_USERS }}"
       SECRET: "{{ TINYAUTH_SECRET }}"
       APP_URL: "{{ TINYAUTH_APP_URL }}"
-      GENERIC_CLIENT_ID: "{{ TINYAUTH_GENERIC_CLIENT_ID }}"
-      GENERIC_CLIENT_SECRET: "{{ TINYAUTH_GENERIC_CLIENT_SECRET }}"
-      GENERIC_AUTH_URL: "{{ TINYAUTH_GENERIC_AUTH_URL }}"
-      GENERIC_TOKEN_URL: "{{ TINYAUTH_GENERIC_TOKEN_URL }}"
-      GENERIC_USER_URL: "{{ TINYAUTH_GENERIC_USER_URL }}"
-      GENERIC_SCOPES: "{{ TINYAUTH_GENERIC_SCOPES }}"
-      GENERIC_NAME: "{{ TINYAUTH_GENERIC_NAME }}"
+      PROVIDERS_POCKETID_CLIENT_ID: "{{ TINYAUTH_GENERIC_CLIENT_ID }}"
+      PROVIDERS_POCKETID_CLIENT_SECRET: "{{ TINYAUTH_GENERIC_CLIENT_SECRET }}"
+      PROVIDERS_POCKETID_AUTH_URL: "{{ TINYAUTH_GENERIC_AUTH_URL }}"
+      PROVIDERS_POCKETID_TOKEN_URL: "{{ TINYAUTH_GENERIC_TOKEN_URL }}"
+      PROVIDERS_POCKETID_USER_INFO_URL: "{{ TINYAUTH_GENERIC_USER_URL }}"
+      PROVIDERS_POCKETID_SCOPES: "{{ TINYAUTH_GENERIC_SCOPES }}"
+      PROVIDERS_POCKETID_NAME: "{{ TINYAUTH_GENERIC_NAME }}"
+      PROVIDERS_POCKETID_REDIRECT_URL: "{{ TINYAUTH_REDIRECT_URL }}"
       OAUTH_WHITELIST: "{{ TINYAUTH_OAUTH_WHITELIST }}"
       APP_TITLE: "{{ TINYAUTH_APP_TITLE }}"
       BACKGROUND_IMAGE: "{{ TINYAUTH_BACKGROUND_IMAGE }}"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
     labels:
       traefik.enable: "true"
       traefik.http.routers.tinyauth.rule: Host(`auth.fntz.net`)
