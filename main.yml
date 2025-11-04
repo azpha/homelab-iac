@@ -61,15 +61,9 @@
     - name: Deploy Immich
       import_tasks: tasks/immich.yml
       tags: immich_deploy
-    - name: Deploy Navidrome
-      import_tasks: tasks/navidrome.yml
-      tags: navidrome_deploy
     - name: Deploy Drop
       import_tasks: tasks/drop.yml
       tags: drop_deploy
-    - name: Deploy Home Assistant
-      import_tasks: tasks/home-assistant.yml
-      tags: home-assistant_deploy
     - name: Deploy Gluetun
       import_tasks: tasks/gluetun.yml
       tags: gluetun_deploy
@@ -91,12 +85,17 @@
     - name: Deploy Helium services
       import_tasks: tasks/helium.yml
       tags: helium_deploy
+    - name: Deploy Pterodactyl
+      import_tasks: tasks/pterodactyl.yml
+      tags: pterodactyl_deploy
 
 - hosts: jackson
 
   roles:
     - role: traefik
       tags: traefik_deploy
+      vars:
+        server: "jackson"
     - role: fivem
       tags: fivem_deploy
 
@@ -122,6 +121,12 @@
 
 - hosts: nas
 
+  roles:
+    - role: traefik
+      tags: traefik_deploy
+      vars:
+        server: "nas"
+
   tasks:
     - name: Deploy Plex
       import_tasks: tasks/plex.yml
@@ -132,3 +137,6 @@
     - name: Deploy Ersatz
       import_tasks: tasks/ersatztv.yml
       tags: ersatztv_deploy
+    - name: Deploy Wings
+      import_tasks: tasks/wings.yml
+      tags: wings_deploy

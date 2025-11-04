@@ -1,0 +1,89 @@
+---
+- name: Create folder structure
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ data_dir }}/pterodactyl"
+    - "{{ data_dir }}/pterodactyl/var"
+    - "{{ data_dir }}/pterodactyl/logs"
+    - "{{ data_dir }}/pterodactyl/nginx"
+    - "{{ data_dir }}/pterodactyl/db"
+
+- name: Create Pterodactyl Network
+  docker_network:
+    name: pterodactyl
+
+- name: Pull latest MariaDB Docker Image
+  docker_image:
+    name: mariadb
+    tag: "10.5"
+    source: pull
+- name: Pull latest Redis Docker image
+  docker_image:
+    name: redis
+    tag: 7-alpine
+    source: pull
+- name: Pull latest Pterodactyl Docker image
+  docker_image:
+    name: ghcr.io/pterodactyl/panel
+    tag: latest
+    source: pull
+
+- name: Create Redis Container
+  docker_container:
+    name: pterodactyl_redis
+    image: redis:7-alpine
+    recreate: true
+    restart_policy: unless-stopped
+    networks:
+      - name: pterodactyl
+
+- name: Create Database Container
+  docker_container:
+    name: pterodactyl_db
+    image: mariadb:10.5
+    command: --default-authentication-plugin=mysql_native_password
+    recreate: true
+    restart_policy: unless-stopped
+    volumes:
+      - "{{ data_dir }}/pterodactyl/db:/var/lib/mysql"
+    networks:
+      - name: pterodactyl
+    env:
+      MYSQL_DATABASE: "panel"
+      MYSQL_USER: "pterodactyl"
+      MYSQL_ROOT_PASSWORD: "{{ PTERODACTYL_MYSQL_ROOT_PASSWORD }}"
+      MYSQL_PASSWORD: "{{ PTERODACTYL_MYSQL_PASSWORD }}"
+
+- name: Create Pterodactyl Docker Container
+  docker_container:
+    name: pterodactyl
+    image: ghcr.io/pterodactyl/panel:latest
+    recreate: true
+    restart_policy: unless-stopped
+    networks:
+      - name: pterodactyl
+      - name: homelab
+    volumes:
+      - "{{ data_dir }}/pterodactyl/nginx:/etc/nginx/http.d"
+      - "{{ data_dir }}/pterodactyl/logs:/app/storage/logs"
+      - "{{ data_dir }}/pterodactyl/var:/app/var"
+    env:
+      APP_URL: "{{ PTERODACTYL_APP_URL }}"
+      APP_ENVIRONMENT_ONLY: "false"
+      APP_TIMEZONE: "{{ TZ }}"
+      DB_PASSWORD: "{{ PTERODACTYL_MYSQL_PASSWORD }}"
+      APP_ENV: "production"
+      CACHE_DRIVER: "redis"
+      SESSION_DRIVER: "redis"
+      QUEUE_DRIVER: "redis"
+      REDIS_HOST: "pterodactyl_redis"
+      DB_HOST: "pterodactyl_db"
+      TRUSTED_PROXIES: "*"
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.panel.rule: Host(`panel.fntz.net`)
+      traefik.http.routers.panel.entrypoints: webSecure
+      traefik.http.routers.panel.tls.certresolver: letsencrypt
+      traefik.http.services.panel.loadbalancer.server.port: "80"

@@ -1,0 +1,51 @@
+---
+- name: Create folder structure
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ data_dir }}/wings"
+    - "{{ data_dir }}/wings/lib"
+
+- name: Pull latest Wings Docker image
+  docker_image:
+    name: ghcr.io/pterodactyl/wings
+    tag: latest
+    source: pull
+
+- name: Create Wings Network
+  docker_network:
+    name: wings
+    driver: bridge
+    ipam_config:
+      - subnet: "172.55.0.0/16"
+
+- name: Create Wings Docker Container
+  docker_container:
+    name: pterodactyl_wings
+    image: ghcr.io/pterodactyl/wings:latest
+    recreate: true
+    restart_policy: unless-stopped
+    networks:
+      - name: wings
+      - name: homelab
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "/etc/pterodactyl:/etc/pterodactyl"
+      - "{{ data_dir }}/wings/lib:{{ data_dir }}/wings/lib"
+      - "/storage-pool/Docker/containers:/storage-pool/Docker/containers"
+      - "/var/log/pterodactyl:/var/log/pterodactyl"
+      - "/tmp/pterodactyl:/tmp/pterodactyl"
+    env:
+      TZ: "{{ TZ }}"
+      WINGS_UID: "988"
+      WINGS_GID: "988"
+      WINGS_USERNAME: pterodactyl
+    published_ports:
+      - "2022:2022"
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.wings.rule: Host(`wings.fntz.net`)
+      traefik.http.routers.wings.entrypoints: webSecure
+      traefik.http.routers.wings.tls.certresolver: letsencrypt
+      traefik.http.services.wings.loadbalancer.server.port: "8080"
