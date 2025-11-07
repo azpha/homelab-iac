@@ -53,6 +53,7 @@ def main():
 
   deployed = []
   failed = []
+  removed = []
   for file in diff:
     # separating these for now because roles will typically
     # have a bunch of other things tied to them
@@ -69,8 +70,10 @@ def main():
           subprocess.run("/usr/bin/docker container prune -f", shell=True)
 
           print(f"Cleaned up container {task_name}")
+          removed.append(task_name)
 
-    if "host_vars" not in file:
+
+    if "host_vars" not in file and task_name not in removed:
       # deploy the task, regardless of its status
       if "roles/" not in file:
         if task_name not in deployed:
