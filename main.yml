@@ -28,9 +28,6 @@
     - name: Deploy PocketID
       import_tasks: tasks/pocketid.yml
       tags: pocketid_deploy
-    - name: Deploy Ntfy
-      import_tasks: tasks/ntfy.yml
-      tags: ntfy_deploy
     - name: Deploy NZBGet
       import_tasks: tasks/nzbget.yml
       tags: nzbget_deploy
@@ -73,9 +70,6 @@
     - name: Deploy Jackett
       import_tasks: tasks/jackett.yml
       tags: jackett_deploy
-    - name: Deploy NFL Proxy
-      import_tasks: tasks/nfl-proxy.yml
-      tags: nfl-proxy_deploy
     - name: Deploy Uptime Kuma
       import_tasks: tasks/uptime-kuma.yml
       tags: uptime-kuma_deploy
@@ -115,9 +109,6 @@
     - name: Deploy Owncloud
       import_tasks: tasks/owncloud.yml
       tags: owncloud_deploy
-    - name: Deploy Mastodon
-      import_tasks: tasks/mastodon.yml
-      tags: mastodon_deploy
 
 - hosts: nas
 
