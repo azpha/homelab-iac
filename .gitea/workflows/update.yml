@@ -1,0 +1,17 @@
+name: Update Images
+
+on:
+  workflow_dispatch:
+
+jobs:
+  run-update:
+    name: Run update script
+    runs-on: runner
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run update script
+        run: |
+          echo "${{ secrets.VAULT_PASS }}" > ~/.vault_pass.txt
+          python3 scripts/run_updates.py
