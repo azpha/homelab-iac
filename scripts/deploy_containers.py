@@ -55,6 +55,7 @@ def main():
   failed = []
   removed = []
   for file in diff:
+    task_name = ""
     # separating these for now because roles will typically
     # have a bunch of other things tied to them
     if "roles/" not in file and "host_vars/" not in file:
