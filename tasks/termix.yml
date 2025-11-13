@@ -1,0 +1,34 @@
+---
+- name: Create folder structure
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: 999
+  with_items:
+    - "{{ data_dir }}/termix"
+    - "{{ data_dir }}/termix"
+
+- name: Pull latest Termix Docker Image
+  docker_image:
+    name: ghcr.io/lukegus/termix
+    tag: latest
+    source: pull
+
+- name: Create Termix Docker Container
+  docker_container:
+    name: termix
+    image: ghcr.io/lukegus/termix:latest
+    restart_policy: unless-stopped
+    recreate: true
+    networks:
+      - name: homelab
+    volumes:
+      - "{{ data_dir }}/termix:/app/data"
+    env:
+      PORT: "8080"
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.termix.rule: Host(`ssh.fntz.net`)
+      traefik.http.routers.termix.entrypoints: webSecure
+      traefik.http.routers.termix.tls.certresolver: letsencrypt
+      traefik.http.services.termix.loadbalancer.server.port: "8080"

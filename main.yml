@@ -82,6 +82,9 @@
     - name: Deploy Pterodactyl
       import_tasks: tasks/pterodactyl.yml
       tags: pterodactyl_deploy
+    - name: Deploy Termix
+      import_tasks: tasks/termix.yml
+      tags: termix_deploy
 
 - hosts: jackson
 
