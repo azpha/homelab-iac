@@ -5,7 +5,6 @@
     state: directory
   with_items:
     - "{{ data_dir }}/termix"
-    - "{{ data_dir }}/termix"
 
 - name: Pull latest Termix Docker Image
   docker_image:
