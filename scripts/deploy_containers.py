@@ -73,7 +73,7 @@ def main():
           removed.append(task_name)
 
 
-    if "host_vars" not in file and task_name not in removed:
+    if "host_vars" not in file and task_name and task_name not in removed:
       # deploy the task, regardless of its status
       if "roles/" not in file:
         if task_name not in deployed:
