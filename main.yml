@@ -76,9 +76,6 @@
     - name: Deploy CouchDB for obsidian
       import_tasks: tasks/obsidian.yml
       tags: obsidian_deploy
-    - name: Deploy Helium services
-      import_tasks: tasks/helium.yml
-      tags: helium_deploy
     - name: Deploy Pterodactyl
       import_tasks: tasks/pterodactyl.yml
       tags: pterodactyl_deploy
