@@ -1,25 +1,16 @@
 ---
-- name: Create folder structure
-  file:
-    path: "{{ item }}"
-    state: directory
-  with_items:
-    - "{{ data_dir }}/glance"
-    - "{{ data_dir }}/glance/config"
-    - "{{ data_dir }}/glance/assets"
-
-- name: Pull latest Glance Docker Image
-  docker_image:
-    name: glanceapp/glance
-    tag: latest
-    source: pull
-
-- name: Create Glance Docker Container
-  docker_container:
+- name: Deploy Glance
+  include_role:
+    name: docker
+  vars:
     name: glance
-    image: glanceapp/glance
-    restart_policy: unless-stopped
-    recreate: true
+    image:
+      name: glanceapp/glance
+      tag: latest
+    directories:
+      - "{{ data_dir }}/glance"
+      - "{{ data_dir }}/glance/config"
+      - "{{ data_dir }}/glance/assets"
     networks:
       - name: homelab
     env:
