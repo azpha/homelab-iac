@@ -1,4 +1,9 @@
 http:
+  middlewares:
+    tinyauth:
+      forwardauth:
+        address: http://tinyauth:3000/api/auth/traefik
+
   routers:
     plex:
       rule: "Host(`tv.fntz.net`)"
