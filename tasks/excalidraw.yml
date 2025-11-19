@@ -1,16 +1,12 @@
 ---
-- name: Pull latest Excalidraw Docker Image
-  docker_image:
-    name: excalidraw/excalidraw
-    tag: latest
-    source: pull
-
-- name: Create Excalidraw Docker Container
-  docker_container:
+- name: Deploy Excalidraw
+  include_role:
+    name: docker
+  vars:
     name: excalidraw
-    image: excalidraw/excalidraw
-    restart_policy: unless-stopped
-    recreate: true
+    image:
+      name: excalidraw/excalidraw
+      tag: latest
     networks:
       - name: homelab
     labels:
