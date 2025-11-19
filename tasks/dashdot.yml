@@ -1,16 +1,12 @@
 ---
-- name: Pull latest Dashdot Docker Image
-  docker_image:
-    name: mauricenino/dashdot
-    tag: latest
-    source: pull
-
-- name: Create Dashdot Docker Container
-  docker_container:
+- name: Deploy Dashdot
+  include_role:
+    name: docker
+  vars:
     name: dashdot
-    image: mauricenino/dashdot
-    restart_policy: unless-stopped
-    recreate: true
+    image:
+      name: mauricenino/dashdot
+      tag: latest
     networks:
       - name: homelab
     volumes:
