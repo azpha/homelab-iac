@@ -5,6 +5,25 @@
     state: directory
   with_items: "{{ directories }}"
 
+- name: Clone repository
+  git:
+    repo: "{{ build.git.repo }}"
+    dest: "{{ build.git.dest }}"
+  when: build is defined
+
+- name: Build Docker Image
+  docker_image:
+    name: "{{ image.name }}"
+    tag: "{{ image.tag }}"
+    build:
+      nocache: true
+      path: "{{ build.git.dest }}"
+      dockerfile: Dockerfile
+    source: build
+    force_source: true
+    state: present
+  when: build is defined
+
 - name: Pull latest Docker image
   docker_image:
     name: "{{ image.name }}"
