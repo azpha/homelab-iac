@@ -4,6 +4,7 @@
     path: "{{ item }}"
     state: directory
   with_items: "{{ directories }}"
+  when: directories is defined
 
 - name: Clone repository
   git:
@@ -42,6 +43,6 @@
     recreate: true
     restart_policy: unless-stopped
     networks: "{{ networks }}"
-    volumes: "{{ volumes }}"
-    env: "{{ env }}"
-    labels: "{{ labels }}"
+    volumes: "{{ volumes | default(omit) }}"
+    env: "{{ env | default(omit) }}"
+    labels: "{{ labels | default(omit) }}"
