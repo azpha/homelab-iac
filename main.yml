@@ -112,6 +112,9 @@
     - name: Deploy Owncloud
       import_tasks: tasks/owncloud.yml
       tags: owncloud_deploy
+    - name: Deploy Wings
+      import_tasks: tasks/wings.yml
+      tags: wings_deploy
 
 - hosts: nas
 

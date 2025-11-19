@@ -33,7 +33,7 @@
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "/etc/pterodactyl:/etc/pterodactyl"
       - "{{ data_dir }}/wings/lib:{{ data_dir }}/wings/lib"
-      - "/storage-pool/Docker/containers:/storage-pool/Docker/containers"
+      - "{{ WINGS_CONTAINER_DIR }}:{{ WINGS_CONTAINER_DIR }}"
       - "/var/log/pterodactyl:/var/log/pterodactyl"
       - "/tmp/pterodactyl:/tmp/pterodactyl"
     env:
@@ -45,7 +45,7 @@
       - "2022:2022"
     labels:
       traefik.enable: "true"
-      traefik.http.routers.wings.rule: Host(`wings.fntz.net`)
+      traefik.http.routers.wings.rule: Host(`{{ WINGS_URL }}`)
       traefik.http.routers.wings.entrypoints: webSecure
       traefik.http.routers.wings.tls.certresolver: letsencrypt
       traefik.http.services.wings.loadbalancer.server.port: "8080"
