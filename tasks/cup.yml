@@ -1,17 +1,10 @@
 ---
-- name: Pull latest Cup Docker Image
-  docker_image:
-    name: ghcr.io/sergi0g/cup
-    tag: latest
-    source: pull
-
-- name: Create Cup Docker Container
-  docker_container:
-    name: Cup
-    image: ghcr.io/sergi0g/cup
+- name: Deploy Cup
+  include_role:
+    name: docker
+  vars:
+    name: cup
     command: serve
-    restart_policy: unless-stopped
-    recreate: true
     networks:
       - name: homelab
     volumes:
@@ -22,3 +15,6 @@
       traefik.http.routers.cup.entrypoints: webSecure
       traefik.http.routers.cup.tls.certresolver: letsencrypt
       traefik.http.services.cup.loadbalancer.server.port: "8000"
+    image:
+      name: ghcr.io/sergi0g/cup
+      tag: latest
