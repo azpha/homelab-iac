@@ -1,23 +1,14 @@
 ---
-- name: Create folder structure
-  file:
-    path: "{{ item }}"
-    state: directory
-  with_items:
-    - "{{ data_dir }}/code-server"
-
-- name: Pull latest Code Server Docker Image
-  docker_image:
-    name: lscr.io/linuxserver/code-server
-    tag: latest
-    source: pull
-
-- name: Create Code Server Docker Container
-  docker_container:
-    name: codeserver
-    image: lscr.io/linuxserver/code-server:latest
-    restart_policy: unless-stopped
-    recreate: true
+- name: Deploy Code Server
+  include_role:
+    name: docker
+  vars:
+    name: "codeserver"
+    directories:
+      - "{{ data_dir }}/code-server"
+    image:
+      name: lscr.io/linuxserver/code-server
+      tag: latest
     networks:
       - name: homelab
     volumes:

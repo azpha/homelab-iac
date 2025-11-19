@@ -1,0 +1,28 @@
+---
+- name: Create folder structure
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items: "{{ directories }}"
+
+- name: Pull latest Docker image
+  docker_image:
+    name: "{{ image.name }}"
+    tag: "{{ image.tag }}"
+    source: pull
+
+- name: Create Docker Network
+  docker_network:
+    name: "{{ network_name }}"
+  when: network_name is defined
+
+- name: Create Docker Container
+  docker_container:
+    name: "{{ name }}"
+    image: "{{ image.name }}:{{ image.tag }}"
+    recreate: true
+    restart_policy: unless-stopped
+    networks: "{{ networks }}"
+    volumes: "{{ volumes }}"
+    env: "{{ env }}"
+    labels: "{{ labels }}"
