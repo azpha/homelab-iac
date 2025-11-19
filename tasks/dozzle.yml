@@ -1,18 +1,14 @@
 ---
-- name: Pull latest Dozzle Docker Image
-  docker_image:
-    name: amir20/dozzle
-    tag: latest
-    source: pull
-
-- name: Create Dozzle Docker Container
-  docker_container:
+- name: Deploy Dozzle
+  include_role:
+    name: docker
+  vars:
     name: dozzle
-    image: amir20/dozzle:latest
-    restart_policy: unless-stopped
-    recreate: true
     networks:
       - name: homelab
+    image:
+      name: amir20/dozzle
+      tag: latest
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
     env:
