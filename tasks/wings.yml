@@ -28,7 +28,7 @@
     restart_policy: unless-stopped
     networks:
       - name: wings
-      - name: homelab
+      - name: "{{ docker_network_name }}"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "/etc/pterodactyl:/etc/pterodactyl"
