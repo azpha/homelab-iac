@@ -1,23 +1,12 @@
 ---
-- name: Create folder structure
-  file:
-    path: "{{ item }}"
-    state: directory
-  with_items:
-    - "{{ data_dir }}/vaultwarden"
-
-- name: Pull latest Vaultwarden Docker Image
-  docker_image:
-    name: vaultwarden/server
-    tag: latest
-    source: pull
-
-- name: Create Vaultwarden Docker Container
-  docker_container:
+- name: Deploy Vaultwarden
+  include_role:
+    name: docker
+  vars:
     name: vaultwarden
-    image: vaultwarden/server:latest
-    restart_policy: unless-stopped
-    recreate: true
+    image:
+      name: vaultwarden/server
+      tag: latest
     networks:
       - name: homelab
     volumes:
