@@ -4,6 +4,8 @@
     name: docker
   vars:
     name: nzbget
+    directories:
+      - "{{ data_dir }}/nzbget"
     image:
       name: lscr.io/linuxserver/nzbget
       tag: latest

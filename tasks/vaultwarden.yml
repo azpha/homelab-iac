@@ -4,6 +4,8 @@
     name: docker
   vars:
     name: vaultwarden
+    directories:
+      - "{{ data_dir }}/vaultwarden"
     image:
       name: vaultwarden/server
       tag: latest

@@ -4,6 +4,8 @@
     name: docker
   vars:
     name: tautulli
+    directories:
+      - "{{ data_dir }}/tautulli"
     image:
       name: ghcr.io/tautulli/tautulli
       tag: latest

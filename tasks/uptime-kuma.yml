@@ -4,6 +4,8 @@
     name: docker
   vars:
     name: uptime-kuma
+    directories:
+      - "{{ data_dir }}/uptime-kuma"
     image:
       name: louislam/uptime-kuma
       tag: latest

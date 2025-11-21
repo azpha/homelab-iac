@@ -4,6 +4,8 @@
     name: docker
   vars:
     name: homebridge
+    directories:
+      - "{{ data_dir }}/homebridge:/homebridge"
     image:
       name: homebridge/homebridge
       tag: latest

@@ -4,6 +4,8 @@
     name: docker
   vars:
     name: pocketid
+    directories:
+      - "{{ data_dir }}/pocketid"
     image:
       name: ghcr.io/pocket-id/pocket-id
       tag: v1

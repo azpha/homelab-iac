@@ -4,6 +4,8 @@
     name: docker
   vars:
     name: pihole
+    directories:
+      - "{{ data_dir }}/pihole"
     image:
       name: pihole/pihole
       tag: latest
