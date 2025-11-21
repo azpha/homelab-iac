@@ -39,6 +39,7 @@
 - name: Create Docker Container
   docker_container:
     name: "{{ name }}"
+    network_mode: "{{ network_mode | default(omit) }}"
     image: "{{ image.name }}:{{ image.tag }}"
     command: "{{ command | default(omit) }}"
     recreate: true

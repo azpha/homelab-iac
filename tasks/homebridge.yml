@@ -1,24 +1,13 @@
 ---
-- name: Create Folder structure
-  file:
-    path: "{{ item }}"
-    state: directory
-  with_items:
-    - "{{ data_dir }}/homebridge"
-
-- name: Pull latest Homebridge Docker Image
-  docker_image:
-    name: homebridge/homebridge
-    tag: latest
-    source: pull
-
-- name: Create Homebridge Docker Container
-  docker_container:
+- name: Deploy Homebridge
+  include_role:
+    name: docker
+  vars:
     name: homebridge
-    image: homebridge/homebridge:latest
-    restart_policy: unless-stopped
+    image:
+      name: homebridge/homebridge
+      tag: latest
     network_mode: host
-    recreate: true
     volumes:
       - "{{ data_dir }}/homebridge:/homebridge"
     labels:
