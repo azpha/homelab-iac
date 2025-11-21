@@ -1,23 +1,12 @@
 ---
-- name: Create folder structure
-  file:
-    path: "{{ item }}"
-    state: directory
-  with_items:
-    - "{{ data_dir }}/uptime-kuma"
-
-- name: Pull latest Uptime Kuma Docker Image
-  docker_image:
-    name: louislam/uptime-kuma
-    tag: latest
-    source: pull
-
-- name: Create Uptime Kuma Docker Container
-  docker_container:
+- name: Deploy Uptime Kuma
+  include_role:
+    name: docker
+  vars:
     name: uptime-kuma
-    image: louislam/uptime-kuma
-    restart_policy: unless-stopped
-    recreate: true
+    image:
+      name: louislam/uptime-kuma
+      tag: latest
     networks:
       - name: homelab
     volumes:
