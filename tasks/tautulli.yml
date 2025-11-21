@@ -1,23 +1,12 @@
 ---
-- name: Create folder structure
-  file:
-    path: "{{ item }}"
-    state: directory
-  with_items:
-    - "{{ data_dir }}/tautulli"
-
-- name: Pull latest Tautulli Docker Image
-  docker_image:
-    name: ghcr.io/tautulli/tautulli
-    tag: latest
-    source: pull
-
-- name: Create Tautulli Docker Container
-  docker_container:
+- name: Deploy Tautulli
+  include_role:
+    name: docker
+  vars:
     name: tautulli
-    image: ghcr.io/tautulli/tautulli
-    restart_policy: unless-stopped
-    recreate: true
+    image:
+      name: ghcr.io/tautulli/tautulli
+      tag: latest
     networks:
       - name: homelab
     volumes:
