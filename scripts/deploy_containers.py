@@ -5,8 +5,7 @@ import subprocess
 def git_diff():
   args = sys.argv
   res = subprocess.run(f"git diff --name-only {args[1]} {args[2]}", capture_output=True, shell=True, text=True)
-  # return [x for x in res.stdout.strip().split("\n") if "tasks/" in x or "roles/" in x]
-  return ["roles/docker/tasks/fuck.yml", "roles/fuck/test/test.yml", "roles/fivem/tasks/main.yml", "tasks/fuck.yml", "tasks/api.yml", "tasks/cup.yml"]
+  return [x for x in res.stdout.strip().split("\n") if "tasks/" in x or "roles/" in x]
 
 def construct_command(tag = None, host = None):
   command = f"ANSIBLE_CONFIG=ansible.cfg /usr/bin/ansible-playbook main.yml --vault-password-file ~/.vault_pass.txt"
