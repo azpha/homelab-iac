@@ -37,9 +37,3 @@ jobs:
               "head": "template-extraction-${{ github.run_number }}",
               "base": "main"
             }'
-
-      - name: Delete Branch
-        run: |
-          curl -X DELETE \
-            "https://git.alexav.gg/api/v1/repos/alex/homelab/branches/template-extraction-${{ github.run_number }}" \
-            -H "Authorization: token ${{ secrets.TOKEN }}"
