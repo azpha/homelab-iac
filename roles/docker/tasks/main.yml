@@ -25,12 +25,6 @@
     state: present
   when: build is defined
 
-- name: Pull latest Docker image
-  docker_image:
-    name: "{{ image.name }}"
-    tag: "{{ image.tag }}"
-    source: pull
-
 - name: Create Docker Network
   docker_network:
     name: "{{ network_name }}"
@@ -41,6 +35,7 @@
     name: "{{ name }}"
     recreate: true
     restart_policy: unless-stopped
+    pull: always
     published_ports: "{{ published_ports | default(omit) }}"
     network_mode: "{{ network_mode | default(omit) }}"
     image: "{{ image.name }}:{{ image.tag }}"
