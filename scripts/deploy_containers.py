@@ -5,7 +5,8 @@ import subprocess
 def git_diff():
   args = sys.argv
   res = subprocess.run(f"git diff --name-only {args[1]} {args[2]}", capture_output=True, shell=True, text=True)
-  return [x for x in res.stdout.strip().split("\n") if "tasks/" in x or "roles/" in x or "host_vars" in x]
+  # return [x for x in res.stdout.strip().split("\n") if "tasks/" in x or "roles/" in x]
+  return ["roles/docker/tasks/fuck.yml", "roles/fuck/test/test.yml", "roles/fivem/tasks/main.yml", "tasks/fuck.yml", "tasks/api.yml", "tasks/cup.yml"]
 
 def construct_command(tag = None, host = None):
   command = f"ANSIBLE_CONFIG=ansible.cfg /usr/bin/ansible-playbook main.yml --vault-password-file ~/.vault_pass.txt"
@@ -24,81 +25,80 @@ def deploy(tag = None, host = None):
     print(f"Deploying {tag}...\n")
   else:
     print(f"Deploying {host}...\n")
-  res = subprocess.run(command, shell=True)
+  res = subprocess.run(command, shell=True, stdout=subprocess.DEVNULL)
 
   return res.returncode == 0
 
 def main():
-  tasks_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../tasks")
+  dir_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '../')
   diff = git_diff()
-  host_vars_changed_for = []
+
+  # containers that need special treatment
+  removed_containers = []
   vpn_containers = [
     "tasks/qbittorrent.yml",
     "tasks/jackett.yml"
   ]
+  managed_roles = [
+    "roles/fivem",
+    "roles/gitea-runner",
+    "roles/traefik"
+  ]
 
-  # because these containers rely on gluetun for network, they need to be recreated when gluetun is recreated
+  # special actions
   if "tasks/gluetun.yml" in diff:
-    print("Gluetun detected in diff, queuing dependent containers for recreation")
+    print("[MAIN] Detected Gluetun in diff, recreating dependent containers..")
     for container in vpn_containers:
       if container not in diff:
         diff.append(container)
 
-  # when variables update for a host & there are no other modified containers, recreate containers on host
-  # for file in diff:
-  #   if "host_vars" in file:
-  #     hostname = file.split("/")[1].split(".")[0]
-  #     print(f"Secret file for '{hostname}' changed, will recreate containers on host after deployment")
-  #     host_vars_changed_for.append(hostname)
+  # clean up the diff
+  new_diff = []
+  for file in diff:
+    task_name = f"{file.split("/")[0]}/{file.split("/")[1]}"
+
+    # i'm not proud of this either
+    if not os.path.exists(os.path.join(dir_path, file)):
+      if "roles" in file and not os.path.exists(os.path.join(dir_path, task_name)) and task_name in managed_roles:
+        print(f"[MAIN] '{task_name}' role removed, marking for cleanup..")
+        removed_containers.append(task_name)
+      elif "tasks" in task_name:
+        print(f"[MAIN] '{task_name}' non-existent, marking for cleanup..")
+        removed_containers.append(task_name) 
+    elif "roles" in file:      
+      if task_name in managed_roles:
+        if task_name not in new_diff:
+          new_diff.append(task_name)
+    elif "tasks" in file:
+      new_diff.append(file.split(".")[0])
+    else:
+      new_diff.append(file)
 
   deployed = []
   failed = []
-  removed = []
-  for file in diff:
-    task_name = ""
-    # separating these for now because roles will typically
-    # have a bunch of other things tied to them
-    if "roles/" not in file and "host_vars/" not in file:
-      task_name = file.split("/")[1].split(".")[0]
-      task_file_path = os.path.join(tasks_path, file.split("/")[1])
+  for task in new_diff:
+    deployment = deploy(tag=task)
 
-      if not os.path.exists(task_file_path):
-        print(f"{task_name} doesn't exist, running cleanup")
-        res = subprocess.run(f"/usr/bin/docker container stop {task_name}", shell=True)
-        if res.returncode == 0:
-          subprocess.run(f"/usr/bin/docker container rm {task_name}", shell=True)
-          subprocess.run("/usr/bin/docker image prune -f", shell=True)
-          subprocess.run("/usr/bin/docker container prune -f", shell=True)
+    if not deployment:
+      failed.append(task)
+    else:
+      deployed.append(task)
 
-          print(f"Cleaned up container {task_name}")
-          removed.append(task_name)
+  for task in removed_containers:
+    print(f"[MAIN] Attempting to remove containers related to '{task}'...")
+    task_name = task.split("/")[1].split(".")[0]
 
+    containers = subprocess.Popen(f"docker container list | grep {task_name}_", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    for line in containers.stdout:
+      docker_container_id = line.rstrip().decode('utf8').split(" ")[0]
+      if docker_container_id and docker_container_id.strip() != "":
+        print(f"[MAIN] Found Docker container {docker_container_id} related to {task}, removing..")
 
-    if "host_vars" not in file and task_name and task_name not in removed:
-      # deploy the task, regardless of its status
-      if "roles/" not in file:
-        if task_name not in deployed:
-          task = deploy(tag=task_name)
-      else:
-        task_name = file.split("/")[1]
-        
-        if task_name not in deployed:
-          task = deploy(tag=task_name)
-
-      if not task:
-        failed.append(task_name)
-      else:
-        deployed.append(task_name)
-
-  if len(host_vars_changed_for) > 0:
-    for host in host_vars_changed_for:
-      print(f"Redeploying containers on {host} due to host vars update")
-      task = deploy(host=host)
-      if task:
-        deployed.append(host)
-      else:
-        failed.append(host)
-
+        # clean up containers & dangling images
+        subprocess.run(f"/usr/bin/docker container stop {docker_container_id}", shell=True, stdout=subprocess.DEVNULL)
+        subprocess.run(f"/usr/bin/docker container rm {docker_container_id}", shell=True, stdout=subprocess.DEVNULL)
+        subprocess.run("/usr/bin/docker image prune -f", shell=True, stdout=subprocess.DEVNULL)
+        subprocess.run("/usr/bin/docker container prune -f", shell=True, stdout=subprocess.DEVNULL)
 
   if len(failed) <= 0 and len(deployed) > 0:
     print("\n---------------------")
@@ -114,7 +114,7 @@ def main():
     print("---------------------\n")
     sys.exit(1)
   elif len(deployed) <= 0:
-    print("Successfully executed, no tasks required execution")
+    print("[MAIN] Successfully executed, no tasks required execution")
     sys.exit(0)
 
 if __name__ == "__main__":
