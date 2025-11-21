@@ -1,18 +1,16 @@
 ---
-- name: Pull latest Tinyauth Docker Image
-  docker_image:
-    name: ghcr.io/steveiliop56/tinyauth
-    tag: v4
-    source: pull
-
-- name: Create Tinyauth Docker Container
-  docker_container:
+- name: Deploy Tinyauth
+  include_role:
+    name: docker
+  vars:
     name: tinyauth
-    image: ghcr.io/steveiliop56/tinyauth:v4
-    restart_policy: unless-stopped
-    recreate: true
+    image:
+      name: ghcr.io/steveiliop56/tinyauth
+      tag: v4
     networks:
       - name: homelab
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
     env:
       USERS: "{{ TINYAUTH_USERS }}"
       SECRET: "{{ TINYAUTH_SECRET }}"
@@ -28,8 +26,6 @@
       OAUTH_WHITELIST: "{{ TINYAUTH_OAUTH_WHITELIST }}"
       APP_TITLE: "{{ TINYAUTH_APP_TITLE }}"
       BACKGROUND_IMAGE: "{{ TINYAUTH_BACKGROUND_IMAGE }}"
-    volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock"
     labels:
       traefik.enable: "true"
       traefik.http.routers.tinyauth.rule: Host(`auth.fntz.net`)
