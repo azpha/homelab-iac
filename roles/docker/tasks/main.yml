@@ -39,11 +39,12 @@
 - name: Create Docker Container
   docker_container:
     name: "{{ name }}"
+    recreate: true
+    restart_policy: unless-stopped
+    published_ports: "{{ published_ports | default(omit) }}"
     network_mode: "{{ network_mode | default(omit) }}"
     image: "{{ image.name }}:{{ image.tag }}"
     command: "{{ command | default(omit) }}"
-    recreate: true
-    restart_policy: unless-stopped
     networks: "{{ networks }}"
     volumes: "{{ volumes | default(omit) }}"
     env: "{{ env | default(omit) }}"
