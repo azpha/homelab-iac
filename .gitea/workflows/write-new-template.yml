@@ -1,13 +1,6 @@
 name: Create New Secrets Template
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - "host_vars/jackson.yml"
-      - "host_vars/jade.yml"
-      - "host_vars/nas.yml"
   workflow_dispatch:
 
 jobs:
