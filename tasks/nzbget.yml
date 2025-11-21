@@ -1,23 +1,12 @@
 ---
-- name: Create folder structure
-  file:
-    path: "{{ item }}"
-    state: directory
-  with_items:
-    - "{{ data_dir }}/nzbget"
-
-- name: Pull latest NZBGet Docker Image
-  docker_image:
-    name: lscr.io/linuxserver/nzbget
-    tag: latest
-    source: pull
-
-- name: Create NZBGet Docker Container
-  docker_container:
+- name: Deploy NZBGet
+  include_role:
+    name: docker
+  vars:
     name: nzbget
-    image: lscr.io/linuxserver/nzbget:latest
-    restart_policy: unless-stopped
-    recreate: true
+    image:
+      name: lscr.io/linuxserver/nzbget
+      tag: latest
     networks:
       - name: homelab
     volumes:
