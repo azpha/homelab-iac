@@ -40,7 +40,7 @@
     network_mode: "{{ network_mode | default(omit) }}"
     image: "{{ image.name }}:{{ image.tag }}"
     command: "{{ command | default(omit) }}"
-    networks: "{{ networks }}"
+    networks: "{{ networks | default(omit) }}"
     volumes: "{{ volumes | default(omit) }}"
     env: "{{ env | default(omit) }}"
     labels: "{{ labels | default(omit) }}"
