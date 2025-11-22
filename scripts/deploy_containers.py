@@ -76,7 +76,6 @@ def main():
   deployed = []
   failed = []
 
-  print("\n")
   for task in new_diff:
     deployment = deploy(tag=task)
 
@@ -84,9 +83,7 @@ def main():
       failed.append(task)
     else:
       deployed.append(task)
-  print("\n")
 
-  print("\n")
   for task in removed_containers:
     print(f"[MAIN] Attempting to remove containers related to '{task}'...")
     task_name = task.split("/")[1].split(".")[0]
@@ -102,7 +99,6 @@ def main():
         subprocess.run(f"/usr/bin/docker container rm {docker_container_id}", shell=True, stdout=subprocess.DEVNULL)
         subprocess.run("/usr/bin/docker image prune -f", shell=True, stdout=subprocess.DEVNULL)
         subprocess.run("/usr/bin/docker container prune -f", shell=True, stdout=subprocess.DEVNULL)
-  print("\n")
 
   if len(failed) <= 0 and len(deployed) > 0:
     print("\n---------------------")
