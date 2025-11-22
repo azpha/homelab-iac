@@ -77,7 +77,7 @@ def main():
   failed = []
 
   for task in new_diff:
-    deployment = deploy(tag=task)
+    deployment = deploy(tag=task.split("/")[1])
 
     if not deployment:
       failed.append(task)
