@@ -1,23 +1,14 @@
 ---
-- name: Create folder structure
-  file:
-    path: "{{ item }}"
-    state: directory
-  with_items:
-    - "{{ data_dir }}/ersatz"
-
-- name: Pull latest Docker Image
-  docker_image:
-    name: ghcr.io/ersatztv/ersatztv
-    tag: latest
-    source: pull
-
-- name: Create Docker Container
-  docker_container:
+- name: Deploy Ersatz
+  include_role:
+    name: docker
+  vars:
     name: ersatztv
-    image: ghcr.io/ersatztv/ersatztv:latest
-    recreate: true
-    restart_policy: unless-stopped
+    directories:
+      - "{{ data_dir }}/ersatz"
+    image:
+      name: ghcr.io/ersatztv/ersatztv
+      tag: latest
     devices:
       - /dev/dri/renderD128:/dev/dri/renderD128
     mounts:
