@@ -1,34 +1,16 @@
 ---
-- name: Create folder structure
-  file:
-    path: "{{ item }}"
-    state: directory
-  with_items:
-    - "{{ data_dir }}/immich"
-    - "{{ data_dir }}/immich/model-cache"
-    - "{{ data_dir }}/immich/db"
-
-- name: Pull latest Immich Server Docker Image
-  docker_image:
-    name: ghcr.io/immich-app/immich-server
-    tag: v2.1.0
-    source: pull
-
-- name: Create Immich Redis Docker Container
-  docker_container:
-    name: immich_redis
-    image: docker.io/valkey/valkey:8-bookworm@sha256:fea8b3e67b15729d4bb70589eb03367bab9ad1ee89c876f54327fc7c6e618571
-    restart_policy: unless-stopped
-    recreate: true
-    networks:
-      - name: immich
-
-- name: Create Immich DB Docker Container
-  docker_container:
+- name: Deploy Immich DB
+  include_role:
+    name: docker
+  vars:
     name: immich_postgres
-    image: ghcr.io/immich-app/postgres:14-vectorchord0.4.3-pgvectors0.2.0@sha256:bcf63357191b76a916ae5eb93464d65c07511da41e3bf7a8416db519b40b1c23
-    restart_policy: unless-stopped
-    recreate: true
+    directories:
+      - "{{ data_dir }}/immich"
+      - "{{ data_dir }}/immich/model-cache"
+      - "{{ data_dir }}/immich/db"
+    image:
+      name: ghcr.io/immich-app/postgres
+      tag: 14-vectorchord0.4.3-pgvectors0.2.0
     volumes:
       - "{{ data_dir }}/immich/db:/var/lib/postgresql/data"
     env:
@@ -38,13 +20,27 @@
       POSTGRES_INITDB_ARGS: "--data-checksums"
     networks:
       - name: immich
+    network_name: immich
 
-- name: Create Immich Server Docker Container
-  docker_container:
-    name: immich_server
-    image: ghcr.io/immich-app/immich-server:v2.1.0
-    restart_policy: unless-stopped
-    recreate: true
+- name: Deploy Immich Redis
+  include_role:
+    name: docker
+  vars:
+    name: immich_redis
+    image:
+      name: docker.io/valkey/valkey
+      tag: 8-bookworm
+    networks:
+      - name: immich
+
+- name: Deploy Immich Server
+  include_role:
+    name: docker
+  vars:
+    name: immich
+    image:
+      name: ghcr.io/immich-app/immich-server
+      tag: v2.1.0
     networks:
       - name: homelab
       - name: immich
