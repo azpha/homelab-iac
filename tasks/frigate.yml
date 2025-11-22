@@ -1,24 +1,15 @@
 ---
-- name: Create folder structure
-  file:
-    path: "{{ item }}"
-    state: directory
-  with_items:
-    - "{{ data_dir }}/frigate"
-
-- name: Pull latest Frigate Docker Image
-  docker_image:
-    name: ghcr.io/blakeblackshear/frigate
-    tag: stable
-    source: pull
-
-- name: Deploy Frigate Docker Container
-  docker_container:
+- name: Deploy Frigate
+  include_role:
+    name: docker
+  vars:
     name: frigate
-    image: ghcr.io/blakeblackshear/frigate:stable
-    recreate: true
+    directories:
+      - "{{ data_dir }}/frigate"
+    image:
+      name: ghcr.io/blakeblackshear/frigate
+      tag: stable
     privileged: true
-    restart_policy: unless-stopped
     published_ports:
       - "5000:5000"
       - "8555:8555/tcp"

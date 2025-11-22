@@ -47,3 +47,4 @@
     healthcheck: "{{ healthcheck | default(omit) }}"
     devices: "{{ devices | default(omit) }}"
     mounts: "{{ mounts | default(omit) }}"
+    privileged: "{{ privileged | default(omit) }}"
