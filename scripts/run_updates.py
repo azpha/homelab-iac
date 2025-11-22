@@ -14,7 +14,7 @@ def search_for_image(image_name):
 
       for key in data:
         if "vars" in key:
-          if image_name in key["vars"]["image"]["name"]:
+          if image_name in key["vars"]["image"]["name"] or image_name == key["vars"]["image"]["name"]:
             return f"{task.split(".")[0]}_deploy"
 
 def main():
@@ -29,25 +29,36 @@ def main():
       for task in host['tasks']:
         deployable_tags.append(task['tags'])
 
-  if len(update_list["images"]) <= 0:
-    print("No images to update!")
-  else:
-    print(f"Updating {update_list["metrics"]["updates_available"]} image(s)..\n")
+  if len(update_list["images"]) > 0:
     already_deployed = []
+    actually_updatable = []
+    blacklist = []
 
     for image in update_list["images"]:
       if image['result']['has_update']:
-        if "remote_digest" in image["result"]["info"]:
-          image_name = image["parts"]["repository"]
-          ansible_tag = search_for_image(image_name) 
-
-          if ansible_tag and ansible_tag in deployable_tags and ansible_tag not in already_deployed:
-            print(f"Updating '{image_name}' ({ansible_tag})..")
-            subprocess.run(f'ANSIBLE_CONFIG=ansible.cfg ansible-playbook main.yml --tags {ansible_tag} --vault-password-file=~/.vault_pass.txt', shell=True)
-            already_deployed.append(ansible_tag)
+        if image in blacklist:
+          print(f"[UPDATE] Ignoring '{image}' due to its blacklist")
+        elif 'version_update_type' in image['result']['info'] and image['result']['info']['version_update_type'] != "major":
+          actually_updatable.append({ 'reference': image['reference'], 'repository': image['parts']['repository'] })
+        elif 'type' in image['result']['info'] and image['result']['info']['type'] == "digest":
+          actually_updatable.append({ 'reference': image['reference'], 'repository': image['parts']['repository'] })
+    
+    print(f"Redeploying {len(actually_updatable)} container(s)..")
+    for image in actually_updatable:
+      ansible_tag = search_for_image(image['repository'])
+      print(ansible_tag, image['reference'])
+      if ansible_tag and ansible_tag in deployable_tags and ansible_tag not in already_deployed:
+        print(f'[UPDATE] Deploying {ansible_tag}..')
+        subprocess.run(f'ANSIBLE_CONFIG=ansible.cfg ansible-playbook main.yml --tags {ansible_tag} --vault-password-file=~/.vault_pass.txt', shell=True)
+      else:
+        print('[UPDATE] Could not find corresponding task, cleaning up..')
+        subprocess.run(f"docker image remove {image['reference']}", shell=True)
+      already_deployed.append(ansible_tag)
 
     print("\nAll images updated, refreshing Cup")
     requests.get("https://cup.fntz.net/api/v3/refresh")
+  else:
+    print("No images to update!")
 
 if __name__ == "__main__":
   main()
