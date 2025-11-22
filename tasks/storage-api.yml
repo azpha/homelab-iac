@@ -1,34 +1,20 @@
 ---
-- name: "Create file structure"
-  file:
-    path: "{{ item }}"
-    state: directory
-  with_items:
-    - "{{ data_dir }}/storage-api"
-    - "{{ data_dir }}/storage-api/app"
-    - "{{ data_dir }}/storage-api/files"
-
-- name: "Clone latest Storage API"
-  git:
-    repo: git@git.alexav.gg:alex/storage-api.git
-    dest: "{{ data_dir }}/storage-api/app"
-
-- name: "Build Storage API Docker Image"
-  docker_image:
+- name: Deploy Storage API
+  include_role:
+    name: docker
+  vars:
     name: storage-api
-    tag: "latest"
+    directories:
+      - "{{ data_dir }}/storage-api"
+      - "{{ data_dir }}/storage-api/app"
+      - "{{ data_dir }}/storage-api/files"
+    image:
+      name: storage-api
+      tag: latest
     build:
-      path: "{{ data_dir }}/storage-api/app"
-      dockerfile: Dockerfile
-    source: build
-    state: present
-
-- name: Deploy Storage API Container
-  docker_container:
-    name: storage_api
-    image: storage-api:latest
-    recreate: true
-    restart_policy: unless-stopped
+      git:
+        repo: git@git.alexav.gg:alex/storage-api.git
+        dest: "{{ data_dir }}/storage-api/app"
     networks:
       - name: "{{ docker_network_name }}"
     volumes:
