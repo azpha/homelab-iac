@@ -24,7 +24,7 @@ def deploy(tag = None, host = None):
     print(f"[MAIN] Deploying {tag}...")
   else:
     print(f"[MAIN] Deploying host {host}...")
-  res = subprocess.run(command, shell=True, stdout=subprocess.DEVNULL)
+  res = subprocess.run(command, shell=True)
 
   return res.returncode == 0
 
