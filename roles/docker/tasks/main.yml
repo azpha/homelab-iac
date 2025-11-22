@@ -44,3 +44,4 @@
     volumes: "{{ volumes | default(omit) }}"
     env: "{{ env | default(omit) }}"
     labels: "{{ labels | default(omit) }}"
+    healthcheck: "{{ healthcheck | default(omit) }}"

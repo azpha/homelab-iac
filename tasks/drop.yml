@@ -1,29 +1,16 @@
 ---
-- name: Create folder structure
-  file:
-    path: "{{ item }}"
-    state: directory
-  with_items:
-    - "{{ data_dir }}/drop"
-    - "{{ data_dir }}/drop/db"
-    - "{{ data_dir }}/drop/app"
-
-- name: Create Drop Network
-  docker_network:
-    name: drop
-
-- name: Pull latest Drop Docker Image
-  docker_image:
-    name: ghcr.io/drop-oss/drop
-    tag: v0.3.3
-    source: pull
-
-- name: Create Drop DB Container
-  docker_container:
+- name: Deploy Drop Database
+  include_roles:
+    name: docker
+  vars:
     name: drop_postgres
-    image: postgres:14-alpine
-    recreate: true
-    restart_policy: unless-stopped
+    directories:
+      - "{{ data_dir }}/drop"
+      - "{{ data_dir }}/drop/db"
+    image:
+      name: postgres
+      tag: 14-alpine
+    network_name: drop
     networks:
       - name: drop
     healthcheck:
@@ -39,12 +26,16 @@
       POSTGRES_USER: "drop"
       POSTGRES_DB: "drop"
 
-- name: Create Drop Container
-  docker_container:
+- name: Deploy Drop
+  include_roles:
+    name: docker
+  vars:
     name: drop
-    image: ghcr.io/drop-oss/drop:latest
-    recreate: true
-    restart_policy: unless-stopped
+    directories:
+      - "{{ data_dir }}/drop/app"
+    image:
+      name: ghcr.io/drop-oss/drop
+      tag: latest
     networks:
       - name: homelab
       - name: drop
