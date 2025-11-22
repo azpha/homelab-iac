@@ -42,7 +42,6 @@ def main():
 
           if ansible_tag and ansible_tag in deployable_tags:
             print(f"Updating '{image_name}' ({ansible_tag})..")
-            subprocess.run(f'docker image pull {image_name}', shell=True)
             subprocess.run(f'ANSIBLE_CONFIG=ansible.cfg ansible-playbook main.yml --tags {ansible_tag} --vault-password-file=~/.vault_pass.txt', shell=True)
 
     print("\nAll images updated, refreshing Cup")
