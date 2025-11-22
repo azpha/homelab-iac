@@ -1,23 +1,14 @@
 ---
-- name: Create folder structure
-  file:
-    path: "{{ item }}"
-    state: directory
-  with_items:
-    - "{{ data_dir }}/termix"
-
-- name: Pull latest Termix Docker Image
-  docker_image:
-    name: ghcr.io/lukegus/termix
-    tag: latest
-    source: pull
-
-- name: Create Termix Docker Container
-  docker_container:
+- name: Deploy Termix
+  include_role:
+    name: docker
+  vars:
     name: termix
-    image: ghcr.io/lukegus/termix:latest
-    restart_policy: unless-stopped
-    recreate: true
+    directories:
+      - "{{ data_dir }}/termix"
+    image:
+      name: ghcr.io/lukegus/termix
+      tag: latest
     networks:
       - name: homelab
     volumes:
