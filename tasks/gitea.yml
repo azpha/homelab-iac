@@ -1,23 +1,14 @@
 ---
-- name: Create folder structure
-  file:
-    path: "{{ item }}"
-    state: directory
-  with_items:
-    - "{{ data_dir }}/gitea"
-
-- name: Pull latest Gitea Docker Image
-  docker_image:
-    name: docker.gitea.com/gitea
-    tag: latest
-    source: pull
-
-- name: Create Gitea Docker Container
-  docker_container:
+- name: Deploy Gitea
+  include_role:
+    name: docker
+  vars:
     name: gitea
-    image: docker.gitea.com/gitea:latest
-    restart_policy: unless-stopped
-    recreate: true
+    directories:
+      - "{{ data_dir }}/gitea"
+    image:
+      name: docker.gitea.com/gitea
+      tag: latest
     networks:
       - name: "{{ docker_network_name }}"
     volumes:
