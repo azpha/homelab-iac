@@ -9,7 +9,7 @@
       - "{{ data_dir }}/api/db"
     image:
       name: postgres
-      tag: latest
+      tag: "17"
     networks:
       - name: api
     volumes:
