@@ -13,8 +13,8 @@ def search_for_image(image_name):
       data = yaml.safe_load(file)
 
       for key in data:
-        if "docker_image" in key:
-          if image_name in key["docker_image"]["name"]:
+        if "vars" in key:
+          if image_name in key["vars"]["image"]["name"]:
             return f"{task.split(".")[0]}_deploy"
 
 def main():
@@ -33,6 +33,7 @@ def main():
     print("No images to update!")
   else:
     print(f"Updating {update_list["metrics"]["updates_available"]} image(s)..\n")
+    already_deployed = []
 
     for image in update_list["images"]:
       if image['result']['has_update']:
@@ -40,9 +41,10 @@ def main():
           image_name = image["parts"]["repository"]
           ansible_tag = search_for_image(image_name) 
 
-          if ansible_tag and ansible_tag in deployable_tags:
+          if ansible_tag and ansible_tag in deployable_tags and ansible_tag not in already_deployed:
             print(f"Updating '{image_name}' ({ansible_tag})..")
             subprocess.run(f'ANSIBLE_CONFIG=ansible.cfg ansible-playbook main.yml --tags {ansible_tag} --vault-password-file=~/.vault_pass.txt', shell=True)
+            already_deployed.append(ansible_tag)
 
     print("\nAll images updated, refreshing Cup")
     requests.get("https://cup.fntz.net/api/v3/refresh")
