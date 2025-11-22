@@ -1,30 +1,18 @@
 ---
-- name: Create folder structure
-  file:
-    path: "{{ item }}"
-    state: directory
-  with_items:
-    - "{{ data_dir }}/owncloud"
-    - "{{ data_dir }}/owncloud/data"
-    - "{{ data_dir }}/owncloud/db"
-    - "{{ data_dir }}/owncloud/redis"
-
-- name: Create Owncloud Docker Network
-  docker_network:
-    name: owncloud
-
-- name: Pull latest Owncloud Docker Image
-  docker_image:
-    name: owncloud/server
-    tag: "10.15"
-    source: pull
-
-- name: Create Owncloud DB Docker Container
-  docker_container:
-    name: oc_database
-    image: mariadb:latest
-    restart_policy: unless-stopped
-    recreate: true
+- name: Deploy Owncloud Database
+  include_role:
+    name: docker
+  vars:
+    name: owncloud_database
+    image:
+      name: mariadb
+      tag: latest
+    directories:
+      - "{{ data_dir }}/owncloud"
+      - "{{ data_dir }}/owncloud/data"
+      - "{{ data_dir }}/owncloud/db"
+      - "{{ data_dir }}/owncloud/redis"
+    network_name: "owncloud"
     networks:
       - name: owncloud
     volumes:
@@ -42,12 +30,14 @@
       timeout: 5s
       retries: 5
 
-- name: Create Owncloud Redis Container
-  docker_container:
-    name: oc_redis
-    image: redis:latest
-    restart_policy: unless-stopped
-    recreate: true
+- name: Deploy Owncloud Redis
+  include_role:
+    name: docker
+  vars:
+    name: owncloud_redis
+    image:
+      name: redis
+      tag: latest
     networks:
       - name: owncloud
     command: "--databases 1"
@@ -59,12 +49,14 @@
     volumes:
       - "{{ data_dir }}/owncloud/redis:/data"
 
-- name: Create Owncloud Docker Container
-  docker_container:
+- name: Deploy Owncloud
+  include_role:
+    name: docker
+  vars:
     name: owncloud
-    image: owncloud/server:10.15
-    restart_policy: unless-stopped
-    recreate: true
+    image:
+      name: owncloud/server
+      tag: 10.16
     networks:
       - name: "{{ docker_network_name }}"
       - name: owncloud
