@@ -58,6 +58,9 @@
       STEAM_API_KEY: "{{ API_STEAM_API_KEY }}"
       CONTACT_WEBHOOK: "{{ API_CONTACT_WEBHOOK }}"
       JWT_KEY: "{{ API_JWT_KEY }}"
+      DISCORD_PUBLIC_KEY: "{{ API_DISCORD_PUBLIC_KEY }}"
+      DISCORD_APP_ID: "{{ API_DISCORD_APP_ID }}"
+      DISCORD_BOT_TOKEN: "{{ API_DISCORD_BOT_TOKEN }}"
     labels:
       traefik.enable: "true"
       traefik.http.routers.aapi.rule: Host(`api.alexav.gg`)
