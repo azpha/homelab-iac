@@ -10,7 +10,6 @@
       name: pihole/pihole
       tag: latest
     published_ports:
-      - "8000:80"
       - "53:53/tcp"
       - "53:53/udp"
     networks:
