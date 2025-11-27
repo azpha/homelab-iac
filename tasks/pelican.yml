@@ -1,0 +1,32 @@
+---
+- name: Deploy Pelican Panel
+  include_role:
+    name: docker
+  vars:
+    name: Pelican
+    directories:
+      - "{{ data_dir }}/pelican"
+    image:
+      name: ghcr.io/pelican-dev/panel
+      tag: latest
+    volumes:
+      - "pelican-data:/pelican-data"
+      - "pelican-logs:/var/www/html/storage/logs"
+      - "{{ data_dir }}/pelican/Caddyfile:/etc/caddy/Caddyfile"
+    etc_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - name: "{{ docker_network_name }}"
+    env:
+      XDG_DATA_HOME: /pelican-data
+      TRUSTED_PROXIES: "172.21.0.0/16"
+      APP_URL: "https://{{ PELICAN_APP_URL }}"
+      ADMIN_EMAIL: "{{ PELICAN_EMAIL }}"
+      PUID: "{{ PUID }}"
+      PGID: "{{ PGID }}"
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.pelican.rule: Host(`panel.landite.games`)
+      traefik.http.routers.pelican.entrypoints: webSecure
+      traefik.http.routers.pelican.tls.certresolver: letsencrypt
+      traefik.http.services.pelican.loadbalancer.server.port: "80"
