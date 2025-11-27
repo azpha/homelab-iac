@@ -28,6 +28,9 @@
       tag: latest
     networks:
       - name: "{{ docker_network_name }}"
+    env:
+      PMA_HOST: "{{ PMA_HOST }}"
+      PMA_PORT: "{{ PMA_PORT }}"
     labels:
       traefik.enable: "true"
       traefik.http.routers.pma.rule: Host(`pma.landite.games`)
