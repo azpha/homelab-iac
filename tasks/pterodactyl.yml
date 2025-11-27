@@ -83,7 +83,7 @@
       TRUSTED_PROXIES: "*"
     labels:
       traefik.enable: "true"
-      traefik.http.routers.panel.rule: Host(`panel.fntz.net`)
+      traefik.http.routers.panel.rule: Host(`{{ PTERODACTYL_APP_URL }}`)
       traefik.http.routers.panel.entrypoints: webSecure
       traefik.http.routers.panel.tls.certresolver: letsencrypt
       traefik.http.services.panel.loadbalancer.server.port: "80"
