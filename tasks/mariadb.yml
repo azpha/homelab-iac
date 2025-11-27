@@ -26,6 +26,8 @@
     image:
       name: phpmyadmin
       tag: latest
+    networks:
+      - name: "{{ docker_network_name }}"
     labels:
       traefik.enable: "true"
       traefik.http.routers.pma.rule: Host(`pma.landite.games`)
