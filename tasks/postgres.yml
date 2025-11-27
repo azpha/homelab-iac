@@ -1,0 +1,19 @@
+---
+- name: Deploy Postgres Database
+  include_role:
+    name: docker
+  vars:
+    name: postgresql
+    directories:
+      - "{{ data_dir }}/db"
+    image:
+      name: postgres
+      tag: "17"
+    networks:
+      - name: "{{ docker_network_name }}"
+    volumes:
+      - "{{ data_dir }}/db:/var/lib/postgresql/data"
+    env:
+      POSTGRES_USER: "root"
+      POSTGRES_PASSWORD: "{{ GLOBAL_POSTGRES_PASSWORD }}"
+      PGDATA: "/var/lib/postgresql/data/pgdata"
