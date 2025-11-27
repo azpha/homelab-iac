@@ -6,8 +6,6 @@
     name: Pelican
     directories:
       - "{{ data_dir }}/pelican"
-      - "{{ data_dir }}/pelican/app"
-      - "{{ data_dir }}/pelican/logs"
     image:
       name: ghcr.io/pelican-dev/panel
       tag: latest
