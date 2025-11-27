@@ -106,6 +106,9 @@
     - name: Deploy Wings
       import_tasks: tasks/wings.yml
       tags: wings_deploy
+    - name: Deploy Pterodactyl
+      import_tasks: tasks/pterodactyl.yml
+      tags: pterodactyl_deploy
 
 - hosts: nas
 
