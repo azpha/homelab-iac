@@ -39,7 +39,7 @@
     published_ports: "{{ published_ports | default(omit) }}"
     network_mode: "{{ network_mode | default(omit) }}"
     image: "{{ image.name }}:{{ image.tag }}"
-    extra_hosts: "{{ extra_hosts | default(omit) }}"
+    etc_hosts: "{{ extra_hosts | default(omit) }}"
     command: "{{ command | default(omit) }}"
     networks: "{{ networks | default(omit) }}"
     volumes: "{{ volumes | default(omit) }}"

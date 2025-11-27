@@ -15,7 +15,7 @@
       - "{{ data_dir }}/pelican:/pelican-data"
       - "{{ data_dir }}/pelican/logs:/var/www/html/storage/logs"
       - "{{ data_dir }}/pelican/Caddyfile:/etc/caddy/Caddyfile"
-    extra_hosts:
+    etc_hosts:
       - "host.docker.internal:host-gateway"
     env:
       XDG_DATA_HOME: /pelican-data
