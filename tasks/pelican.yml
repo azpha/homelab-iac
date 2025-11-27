@@ -21,6 +21,8 @@
       XDG_DATA_HOME: /pelican-data
       APP_URL: "https://{{ PELICAN_APP_URL }}"
       ADMIN_EMAIL: "{{ PELICAN_EMAIL }}"
+      PUID: "{{ PUID }}"
+      PGID: "{{ PGID }}"
     labels:
       traefik.enable: "true"
       traefik.http.routers.panel.rule: Host(`panel.landite.games`)
