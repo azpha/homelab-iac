@@ -31,4 +31,4 @@
       traefik.http.routers.pma.rule: Host(`pma.landite.games`)
       traefik.http.routers.pma.entrypoints: webSecure
       traefik.http.routers.pma.tls.certresolver: letsencrypt
-      traefik.http.services.pma.loadbalancer.server.port: "8080"
+      traefik.http.services.pma.loadbalancer.server.port: "80"
