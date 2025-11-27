@@ -64,7 +64,7 @@
     restart_policy: unless-stopped
     networks:
       - name: pterodactyl
-      - name: homelab
+      - name: "{{ docker_network_name }}"
     volumes:
       - "{{ data_dir }}/pterodactyl/nginx:/etc/nginx/http.d"
       - "{{ data_dir }}/pterodactyl/logs:/app/storage/logs"
