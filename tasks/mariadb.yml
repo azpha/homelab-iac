@@ -17,3 +17,18 @@
     env:
       MYSQL_USER: "root"
       MYSQL_ROOT_PASSWORD: "{{ GLOBAL_POSTGRES_PASSWORD }}"
+
+- name: Deploy PHPMyAdmin
+  include_role:
+    name: docker
+  vars:
+    name: phpmyadmin
+    image:
+      name: phpmyadmin
+      tag: latest
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.pma.rule: Host(`pma.landite.games`)
+      traefik.http.routers.pma.entrypoints: webSecure
+      traefik.http.routers.pma.tls.certresolver: letsencrypt
+      traefik.http.services.pma.loadbalancer.server.port: "8080"
