@@ -103,15 +103,12 @@
     - name: Deploy Owncloud
       import_tasks: tasks/owncloud.yml
       tags: owncloud_deploy
-    - name: Deploy Wings
-      import_tasks: tasks/wings.yml
-      tags: wings_deploy
     - name: Deploy Pelican
       import_tasks: tasks/pelican.yml
       tags: pelican_deploy
     - name: Deploy Database
-      import_tasks: tasks/postgres.yml
-      tags: postgres_deploy
+      import_tasks: tasks/mariadb.yml
+      tags: mariadb_deploy
 
 - hosts: nas
 

@@ -1,0 +1,18 @@
+---
+- name: Deploy MariaDB Database
+  include_role:
+    name: docker
+  vars:
+    name: mariadb
+    directories:
+      - "{{ data_dir }}/db"
+    image:
+      name: mariadb
+      tag: latest
+    networks:
+      - name: "{{ docker_network_name }}"
+    volumes:
+      - "{{ data_dir }}/db:/var/lib/mysql"
+    env:
+      MYSQL_USER: "root"
+      MYSQL_ROOT_PASSWORD: "{{ GLOBAL_POSTGRES_PASSWORD }}"
