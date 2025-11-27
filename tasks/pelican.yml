@@ -12,7 +12,7 @@
       name: ghcr.io/pelican-dev/panel
       tag: latest
     volumes:
-      - "{{ data_dir }}/pelican:/pelican-data"
+      - "{{ data_dir }}/pelican/app:/pelican-data"
       - "{{ data_dir }}/pelican/logs:/var/www/html/storage/logs"
       - "{{ data_dir }}/pelican/Caddyfile:/etc/caddy/Caddyfile"
     etc_hosts:
