@@ -15,6 +15,8 @@
       - "{{ data_dir }}/pelican/Caddyfile:/etc/caddy/Caddyfile"
     etc_hosts:
       - "host.docker.internal:host-gateway"
+    networks:
+      - name: "{{ docker_network_name }}"
     env:
       XDG_DATA_HOME: /pelican-data
       APP_URL: "https://{{ PELICAN_APP_URL }}"
