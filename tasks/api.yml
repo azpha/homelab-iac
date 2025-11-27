@@ -61,6 +61,10 @@
       DISCORD_PUBLIC_KEY: "{{ API_DISCORD_PUBLIC_KEY }}"
       DISCORD_APP_ID: "{{ API_DISCORD_APP_ID }}"
       DISCORD_BOT_TOKEN: "{{ API_DISCORD_BOT_TOKEN }}"
+      MINECRAFT_HOST: "{{ API_MINECRAFT_HOST }}"
+      MINECRAFT_USER: "{{ API_MINECRAFT_USER }}"
+      MINECRAFT_PASSWORD: "{{ API_MINECRAFT_PASSWORD }}"
+      MINECRAFT_DATABASE: "{{ API_MINECRAFT_DATABASE }}"
     labels:
       traefik.enable: "true"
       traefik.http.routers.aapi.rule: Host(`api.alexav.gg`)
