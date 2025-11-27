@@ -19,6 +19,7 @@
       - name: "{{ docker_network_name }}"
     env:
       XDG_DATA_HOME: /pelican-data
+      TRUSTED_PROXIES: "172.21.0.0/16"
       APP_URL: "https://{{ PELICAN_APP_URL }}"
       ADMIN_EMAIL: "{{ PELICAN_EMAIL }}"
       PUID: "{{ PUID }}"
