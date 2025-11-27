@@ -1,0 +1,16 @@
+http:
+  routers:
+    wings:
+      rule: "Host(`wings.landite.games`)"
+      service: wings
+      entryPoints:  
+        - webSecure
+      tls:
+        certResolver: letsencrypt
+    
+  
+  services:
+    wings:
+      loadBalancer:
+        servers:
+          - url: "http://127.0.0.1:8090"
