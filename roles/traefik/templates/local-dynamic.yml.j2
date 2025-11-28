@@ -48,8 +48,14 @@ http:
         - webSecure
       tls:
         certResolver: letsencrypt
+    wings:
+      rule: "Host(`wings.fntz.net`)"
+      service: wings
+      entryPoints:
+        - webSecure
+      tls:
+        certResolver: letsencrypt
     
-  
   services:
     plex:
       loadBalancer:
@@ -75,3 +81,7 @@ http:
       loadBalancer:
         servers:
           - url: "http://nas:8409/"
+    wings:
+      loadBalancer:
+        servers:
+          - url: "http://nas:8090/"

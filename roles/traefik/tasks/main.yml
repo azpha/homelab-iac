@@ -31,6 +31,11 @@
     src: remote-dynamic.yml.j2
     dest: "{{ data_dir }}/traefik/dynamic.yml"
   when: server == "jackson"
+- name: Create Traefik Dynamic File (Remote 2)
+  template:
+    src: remote-ash-1.yml.j2
+    dest: "{{ data_dir }}/traefik/dynamic.yml"
+  when: server == "ash-1"
 
 - name: Deploy Traefik Docker Container
   docker_container:
